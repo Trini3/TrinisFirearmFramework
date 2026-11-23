@@ -44,8 +44,10 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			// Reload with the R key binding.
 			context.getInput().pressKey(GunClient.reloadKey);
 			context.waitTicks(10);
-			context.takeScreenshot("shotgun_reloading");
-			context.waitTicks(40);
+			context.takeScreenshot("shotgun_reload_open");
+			context.waitTicks(10);
+			context.takeScreenshot("shotgun_reload_shell_in");
+			context.waitTicks(30);
 			int rounds = context.computeOnClient(mc -> GunItem.state(mc.player.getMainHandItem()).rounds());
 			if (rounds != 2) {
 				throw new AssertionError("Expected 2 rounds after reload, got " + rounds);
@@ -92,6 +94,16 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			context.takeScreenshot("shotgun_scoped_aiming");
 			context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
 			context.waitTicks(5);
+
+			// Reload with the scope fitted: the scope rides on the barrel, then a third person look.
+			context.getInput().pressKey(GunClient.reloadKey);
+			context.waitTicks(8);
+			context.takeScreenshot("shotgun_scoped_reload");
+			context.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
+			context.waitTicks(4);
+			context.takeScreenshot("shotgun_third_person_reload");
+			context.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
+			context.waitTicks(40);
 
 			// Third person look at the arm pose.
 			context.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));

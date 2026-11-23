@@ -1,141 +1,861 @@
 {
   "model": {
-    "type": "minecraft:select",
-    "property": "minecraft:display_context",
-    "cases": [
-      {
-        "when": [
-          "thirdperson_righthand",
-          "thirdperson_lefthand"
-        ],
-        "model": {
-          "type": "minecraft:select",
-          "property": "tff:attachment",
-          "slot": "scope",
-          "cases": [
-            {
-              "when": "shotgun:scope",
-              "model": {
-                "type": "minecraft:composite",
-                "models": [
-                  {
-                    "type": "minecraft:model",
-                    "model": "shotgun:item/shotgun_held"
-                  },
-                  {
-                    "type": "minecraft:model",
-                    "model": "shotgun:item/scope_on_shotgun_held"
-                  }
-                ]
+    "type": "minecraft:condition",
+    "property": "tff:reloading",
+    "on_true": {
+      "type": "minecraft:select",
+      "property": "tff:attachment",
+      "slot": "scope",
+      "cases": [
+        {
+          "when": "shotgun:scope",
+          "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "tff:reload_progress",
+            "entries": [
+              {
+                "threshold": 0.014,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_01"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_01"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.042,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_02"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_02"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.069,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_03"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_03"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.097,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_04"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_04"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.125,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_05"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_05"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.153,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_06"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_06"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.181,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_07"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_07"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.208,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_08"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_08"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.236,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_09"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_09"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.264,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_10"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_10"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.292,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_11"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_11"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.319,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_12"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_12"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.347,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_13"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_13"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.375,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_14"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_14"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.403,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_15"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_15"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.431,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_16"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_16"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.458,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_17"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_17"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.486,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_18"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_18"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.514,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_19"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_19"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.542,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_20"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_20"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.569,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_21"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_21"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.597,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_22"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_22"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.625,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_23"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_23"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.653,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_24"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_24"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.681,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_25"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_25"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.708,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_26"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_26"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.736,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_27"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_27"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.764,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_28"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_28"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.792,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_29"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_29"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.819,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_30"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_30"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.847,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_31"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_31"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.875,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_32"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_32"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.903,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_33"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_33"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.931,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_34"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_34"
+                    }
+                  ]
+                }
+              },
+              {
+                "threshold": 0.958,
+                "model": {
+                  "type": "minecraft:composite",
+                  "models": [
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/shotgun_35"
+                    },
+                    {
+                      "type": "minecraft:model",
+                      "model": "shotgun:item/reload/scope_35"
+                    }
+                  ]
+                }
               }
-            }
-          ],
-          "fallback": {
-            "type": "minecraft:model",
-            "model": "shotgun:item/shotgun_held"
-          }
-        }
-      }
-    ],
-    "fallback": {
-      "type": "minecraft:condition",
-      "property": "tff:aiming",
-      "on_true": {
-        "type": "minecraft:select",
-        "property": "tff:attachment",
-        "slot": "scope",
-        "cases": [
-          {
-            "when": "shotgun:scope",
-            "model": {
+            ],
+            "fallback": {
               "type": "minecraft:composite",
               "models": [
                 {
                   "type": "minecraft:model",
-                  "model": "shotgun:item/shotgun_aiming_scoped"
+                  "model": "shotgun:item/reload/shotgun_00"
                 },
                 {
                   "type": "minecraft:model",
-                  "model": "shotgun:item/scope_on_shotgun_aiming_scoped"
+                  "model": "shotgun:item/reload/scope_00"
                 }
               ]
+            }
+          }
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "tff:reload_progress",
+        "entries": [
+          {
+            "threshold": 0.014,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_01"
+            }
+          },
+          {
+            "threshold": 0.042,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_02"
+            }
+          },
+          {
+            "threshold": 0.069,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_03"
+            }
+          },
+          {
+            "threshold": 0.097,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_04"
+            }
+          },
+          {
+            "threshold": 0.125,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_05"
+            }
+          },
+          {
+            "threshold": 0.153,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_06"
+            }
+          },
+          {
+            "threshold": 0.181,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_07"
+            }
+          },
+          {
+            "threshold": 0.208,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_08"
+            }
+          },
+          {
+            "threshold": 0.236,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_09"
+            }
+          },
+          {
+            "threshold": 0.264,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_10"
+            }
+          },
+          {
+            "threshold": 0.292,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_11"
+            }
+          },
+          {
+            "threshold": 0.319,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_12"
+            }
+          },
+          {
+            "threshold": 0.347,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_13"
+            }
+          },
+          {
+            "threshold": 0.375,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_14"
+            }
+          },
+          {
+            "threshold": 0.403,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_15"
+            }
+          },
+          {
+            "threshold": 0.431,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_16"
+            }
+          },
+          {
+            "threshold": 0.458,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_17"
+            }
+          },
+          {
+            "threshold": 0.486,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_18"
+            }
+          },
+          {
+            "threshold": 0.514,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_19"
+            }
+          },
+          {
+            "threshold": 0.542,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_20"
+            }
+          },
+          {
+            "threshold": 0.569,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_21"
+            }
+          },
+          {
+            "threshold": 0.597,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_22"
+            }
+          },
+          {
+            "threshold": 0.625,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_23"
+            }
+          },
+          {
+            "threshold": 0.653,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_24"
+            }
+          },
+          {
+            "threshold": 0.681,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_25"
+            }
+          },
+          {
+            "threshold": 0.708,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_26"
+            }
+          },
+          {
+            "threshold": 0.736,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_27"
+            }
+          },
+          {
+            "threshold": 0.764,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_28"
+            }
+          },
+          {
+            "threshold": 0.792,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_29"
+            }
+          },
+          {
+            "threshold": 0.819,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_30"
+            }
+          },
+          {
+            "threshold": 0.847,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_31"
+            }
+          },
+          {
+            "threshold": 0.875,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_32"
+            }
+          },
+          {
+            "threshold": 0.903,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_33"
+            }
+          },
+          {
+            "threshold": 0.931,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_34"
+            }
+          },
+          {
+            "threshold": 0.958,
+            "model": {
+              "type": "minecraft:model",
+              "model": "shotgun:item/reload/shotgun_35"
             }
           }
         ],
         "fallback": {
           "type": "minecraft:model",
-          "model": "shotgun:item/shotgun_aiming"
+          "model": "shotgun:item/reload/shotgun_00"
         }
-      },
-      "on_false": {
-        "type": "minecraft:condition",
-        "property": "tff:reloading",
-        "on_true": {
-          "type": "minecraft:range_dispatch",
-          "property": "tff:reload_progress",
-          "entries": [
-            {
-              "threshold": 0.33,
-              "model": {
-                "type": "minecraft:select",
-                "property": "tff:attachment",
-                "slot": "scope",
-                "cases": [
-                  {
-                    "when": "shotgun:scope",
-                    "model": {
-                      "type": "minecraft:composite",
-                      "models": [
-                        {
-                          "type": "minecraft:model",
-                          "model": "shotgun:item/shotgun_pulling_1"
-                        },
-                        {
-                          "type": "minecraft:model",
-                          "model": "shotgun:item/scope_on_shotgun_pulling_1"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "fallback": {
-                  "type": "minecraft:model",
-                  "model": "shotgun:item/shotgun_pulling_1"
-                }
-              }
-            },
-            {
-              "threshold": 0.66,
-              "model": {
-                "type": "minecraft:select",
-                "property": "tff:attachment",
-                "slot": "scope",
-                "cases": [
-                  {
-                    "when": "shotgun:scope",
-                    "model": {
-                      "type": "minecraft:composite",
-                      "models": [
-                        {
-                          "type": "minecraft:model",
-                          "model": "shotgun:item/shotgun_pulling_2"
-                        },
-                        {
-                          "type": "minecraft:model",
-                          "model": "shotgun:item/scope_on_shotgun_pulling_2"
-                        }
-                      ]
-                    }
-                  }
-                ],
-                "fallback": {
-                  "type": "minecraft:model",
-                  "model": "shotgun:item/shotgun_pulling_2"
-                }
-              }
-            }
+      }
+    },
+    "on_false": {
+      "type": "minecraft:select",
+      "property": "minecraft:display_context",
+      "cases": [
+        {
+          "when": [
+            "thirdperson_righthand",
+            "thirdperson_lefthand"
           ],
-          "fallback": {
+          "model": {
             "type": "minecraft:select",
             "property": "tff:attachment",
             "slot": "scope",
@@ -147,11 +867,11 @@
                   "models": [
                     {
                       "type": "minecraft:model",
-                      "model": "shotgun:item/shotgun_pulling_0"
+                      "model": "shotgun:item/shotgun_held"
                     },
                     {
                       "type": "minecraft:model",
-                      "model": "shotgun:item/scope_on_shotgun_pulling_0"
+                      "model": "shotgun:item/scope_on_shotgun_held"
                     }
                   ]
                 }
@@ -159,8 +879,39 @@
             ],
             "fallback": {
               "type": "minecraft:model",
-              "model": "shotgun:item/shotgun_pulling_0"
+              "model": "shotgun:item/shotgun_held"
             }
+          }
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:condition",
+        "property": "tff:aiming",
+        "on_true": {
+          "type": "minecraft:select",
+          "property": "tff:attachment",
+          "slot": "scope",
+          "cases": [
+            {
+              "when": "shotgun:scope",
+              "model": {
+                "type": "minecraft:composite",
+                "models": [
+                  {
+                    "type": "minecraft:model",
+                    "model": "shotgun:item/shotgun_aiming_scoped"
+                  },
+                  {
+                    "type": "minecraft:model",
+                    "model": "shotgun:item/scope_on_shotgun_aiming_scoped"
+                  }
+                ]
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "shotgun:item/shotgun_aiming"
           }
         },
         "on_false": {
