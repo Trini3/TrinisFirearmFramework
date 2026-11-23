@@ -1,5 +1,9 @@
 package io.github.trini3.tff;
 
+import io.github.trini3.tff.network.TffNetwork;
+import io.github.trini3.tff.registry.TffComponents;
+import io.github.trini3.tff.registry.TffEntities;
+import io.github.trini3.tff.registry.TffRegistries;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +20,9 @@ public final class Tff {
 	}
 
 	public static void init() {
-		LOGGER.info("Trini's Firearm Framework initialising");
+		TffRegistries.init();
+		TffComponents.init();
+		TffEntities.init();
+		TffNetwork.init();
 	}
 }

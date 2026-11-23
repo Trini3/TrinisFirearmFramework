@@ -1,0 +1,6 @@
+{
+  "ammo": ["tff_test:test_shell"],
+  "capacity": 4,
+  "fire_interval": 4,
+  "reload": { "mode": "per_round", "ticks": 5, "round_ticks": 3 }
+}
