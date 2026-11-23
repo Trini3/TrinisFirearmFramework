@@ -7,6 +7,7 @@ import io.github.trini3.tff.data.GunDefinition;
 import io.github.trini3.tff.data.GunState;
 import io.github.trini3.tff.gun.GunItem;
 import io.github.trini3.tff.gun.GunMath;
+import io.github.trini3.tff.gun.GunStats;
 import io.github.trini3.tff.network.FireGunPayload;
 import io.github.trini3.tff.network.ReloadGunPayload;
 import java.util.Optional;
@@ -77,13 +78,12 @@ public final class GunClient {
 		GunState state = GunItem.state(stack);
 		boolean blocked = state.reloading() && gun.reload().mode() == GunDefinition.ReloadMode.MAGAZINE;
 		if (state.rounds() > 0 && !blocked) {
-			applyRecoil(player, gun, GunItem.isAiming(player, stack));
+			applyRecoil(player, gun, GunStats.recoilFactor(gun, stack, player.registryAccess(), GunItem.isAiming(player, stack)));
 		}
 	}
 
 	/** A simple camera kick: up by the pitch, a random nudge sideways. */
-	private static void applyRecoil(LocalPlayer player, GunDefinition gun, boolean aiming) {
-		float factor = aiming ? gun.aim().recoilFactor() : 1f;
+	private static void applyRecoil(LocalPlayer player, GunDefinition gun, float factor) {
 		float pitch = gun.recoil().pitch() * factor;
 		float yaw = gun.recoil().yaw() * factor * (player.getRandom().nextFloat() * 2f - 1f);
 		player.setXRot(Math.clamp(player.getXRot() - pitch, -90f, 90f));
@@ -99,6 +99,6 @@ public final class GunClient {
 		if (!GunItem.isGun(stack)) {
 			return 1f;
 		}
-		return GunItem.definition(stack, player.registryAccess()).map(g -> g.aim().zoom()).orElse(1f);
+		return GunItem.definition(stack, player.registryAccess()).map(g -> GunStats.aimZoom(g, stack, player.registryAccess())).orElse(1f);
 	}
 }

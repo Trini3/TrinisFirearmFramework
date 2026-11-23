@@ -1,7 +1,10 @@
 package io.github.trini3.tff;
 
 import io.github.trini3.tff.network.TffNetwork;
+import io.github.trini3.tff.registry.TffBlocks;
 import io.github.trini3.tff.registry.TffComponents;
+import io.github.trini3.tff.registry.TffCreativeTab;
+import io.github.trini3.tff.registry.TffMenus;
 import io.github.trini3.tff.registry.TffEntities;
 import io.github.trini3.tff.registry.TffRegistries;
 import net.minecraft.resources.Identifier;
@@ -23,6 +26,9 @@ public final class Tff {
 		TffRegistries.init();
 		TffComponents.init();
 		TffEntities.init();
+		TffBlocks.init();
+		TffMenus.init();
+		TffCreativeTab.init();
 		TffNetwork.init();
 	}
 }

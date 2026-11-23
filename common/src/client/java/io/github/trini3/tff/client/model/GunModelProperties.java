@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
  *   <li>{@code tff:aiming} (condition): the holder is aiming down sights with this gun</li>
  *   <li>{@code tff:reload_progress} (range_dispatch, 0 to 1): progress of the current reload step</li>
  *   <li>{@code tff:ammo} (range_dispatch): rounds loaded</li>
+ *   <li>{@code tff:attachment} (select, with {@code slot}): id of the fitted attachment, see {@link AttachmentProperty}</li>
  * </ul>
  */
 public final class GunModelProperties {
@@ -33,6 +34,7 @@ public final class GunModelProperties {
 		TffClientPlatform.INSTANCE.registerConditionalProperty(Tff.id("aiming"), Aiming.MAP_CODEC);
 		TffClientPlatform.INSTANCE.registerRangeProperty(Tff.id("reload_progress"), ReloadProgress.MAP_CODEC);
 		TffClientPlatform.INSTANCE.registerRangeProperty(Tff.id("ammo"), Ammo.MAP_CODEC);
+		TffClientPlatform.INSTANCE.registerSelectProperty(Tff.id("attachment"), AttachmentProperty.TYPE);
 	}
 
 	private static long gameTime(@Nullable ClientLevel level) {

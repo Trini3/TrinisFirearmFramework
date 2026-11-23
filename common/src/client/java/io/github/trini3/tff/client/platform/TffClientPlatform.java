@@ -3,6 +3,13 @@ package io.github.trini3.tff.client.platform;
 import com.mojang.serialization.MapCodec;
 import io.github.trini3.tff.platform.TffPlatform;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperty;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
@@ -24,4 +31,13 @@ public interface TffClientPlatform {
 	void registerConditionalProperty(Identifier id, MapCodec<? extends ConditionalItemModelProperty> codec);
 
 	void registerRangeProperty(Identifier id, MapCodec<? extends RangeSelectItemModelProperty> codec);
+
+	void registerSelectProperty(Identifier id, SelectItemModelProperty.Type<?, ?> type);
+
+	<M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerMenuScreen(MenuType<? extends M> type, ScreenFactory<M, S> factory);
+
+	@FunctionalInterface
+	interface ScreenFactory<M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> {
+		S create(M menu, Inventory inventory, Component title);
+	}
 }

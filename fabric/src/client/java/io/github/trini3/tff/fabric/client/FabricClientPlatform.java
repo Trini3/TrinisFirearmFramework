@@ -6,6 +6,13 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties;
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperty;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperties;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
@@ -36,6 +43,16 @@ public final class FabricClientPlatform implements TffClientPlatform {
 	public void registerConditionalProperty(Identifier id, MapCodec<? extends ConditionalItemModelProperty> codec) {
 		// Made accessible by Fabric API's transitive access wideners.
 		ConditionalItemModelProperties.ID_MAPPER.put(id, codec);
+	}
+
+	@Override
+	public void registerSelectProperty(Identifier id, SelectItemModelProperty.Type<?, ?> type) {
+		SelectItemModelProperties.ID_MAPPER.put(id, type);
+	}
+
+	@Override
+	public <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerMenuScreen(MenuType<? extends M> type, ScreenFactory<M, S> factory) {
+		MenuScreens.register(type, factory::create);
 	}
 
 	@Override

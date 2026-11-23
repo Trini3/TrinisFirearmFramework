@@ -1,6 +1,7 @@
 package io.github.trini3.tff.registry;
 
 import io.github.trini3.tff.Tff;
+import io.github.trini3.tff.data.GunAttachments;
 import io.github.trini3.tff.data.GunDefinition;
 import io.github.trini3.tff.data.GunState;
 import io.github.trini3.tff.platform.TffPlatform;
@@ -25,6 +26,14 @@ public final class TffComponents {
 			.persistent(GunState.CODEC)
 			.networkSynchronized(GunState.STREAM_CODEC)
 			.ignoreSwapAnimation()
+			.build());
+
+	/** Fitted attachments (scopes). */
+	public static final Supplier<DataComponentType<GunAttachments>> ATTACHMENTS = TffPlatform.INSTANCE.register(
+		BuiltInRegistries.DATA_COMPONENT_TYPE, Tff.id("attachments"),
+		() -> DataComponentType.<GunAttachments>builder()
+			.persistent(GunAttachments.CODEC)
+			.networkSynchronized(GunAttachments.STREAM_CODEC)
 			.build());
 
 	private TffComponents() {}

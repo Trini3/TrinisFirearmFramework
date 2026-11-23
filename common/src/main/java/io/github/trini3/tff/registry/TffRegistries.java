@@ -2,6 +2,7 @@ package io.github.trini3.tff.registry;
 
 import io.github.trini3.tff.Tff;
 import io.github.trini3.tff.data.AmmoDefinition;
+import io.github.trini3.tff.data.AttachmentDefinition;
 import io.github.trini3.tff.data.GunDefinition;
 import io.github.trini3.tff.platform.TffPlatform;
 import java.util.Optional;
@@ -10,24 +11,38 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
 /**
- * Datapack registries for gun and ammo definitions. Files live at
- * {@code data/<namespace>/tff/gun/<name>.json} and {@code data/<namespace>/tff/ammo/<name>.json}
+ * Datapack registries for gun, ammo and attachment definitions. Files live at
+ * {@code data/<namespace>/tff/gun/<name>.json}, {@code .../tff/ammo/<name>.json} and {@code .../tff/attachment/<name>.json}
  * and are synced to clients, so client code can read stats like zoom and fire rate.
  */
 public final class TffRegistries {
 	public static final ResourceKey<Registry<GunDefinition>> GUN = ResourceKey.createRegistryKey(Tff.id("gun"));
 	public static final ResourceKey<Registry<AmmoDefinition>> AMMO = ResourceKey.createRegistryKey(Tff.id("ammo"));
+	public static final ResourceKey<Registry<AttachmentDefinition>> ATTACHMENT = ResourceKey.createRegistryKey(Tff.id("attachment"));
 
 	private TffRegistries() {}
 
 	public static void init() {
-		// Ammo first: guns refer to ammo by key.
+		// Ammo and attachments first: guns refer to them by key.
 		TffPlatform.INSTANCE.registerSyncedDataRegistry(AMMO, AmmoDefinition.CODEC);
+		TffPlatform.INSTANCE.registerSyncedDataRegistry(ATTACHMENT, AttachmentDefinition.CODEC);
 		TffPlatform.INSTANCE.registerSyncedDataRegistry(GUN, GunDefinition.CODEC);
 	}
 
 	public static Optional<GunDefinition> gun(HolderLookup.Provider registries, ResourceKey<GunDefinition> key) {
 		return registries.lookup(GUN).flatMap(l -> l.get(key)).map(h -> h.value());
+	}
+
+	public static Optional<AttachmentDefinition> attachment(HolderLookup.Provider registries, ResourceKey<AttachmentDefinition> key) {
+		return registries.lookup(ATTACHMENT).flatMap(l -> l.get(key)).map(h -> h.value());
+	}
+
+	/** Finds the attachment definition (and its key) whose item is {@code stack}. */
+	public static Optional<net.minecraft.core.Holder.Reference<AttachmentDefinition>> attachmentFor(HolderLookup.Provider registries, net.minecraft.world.item.ItemStack stack) {
+		if (stack.isEmpty()) {
+			return Optional.empty();
+		}
+		return registries.lookup(ATTACHMENT).flatMap(l -> l.listElements().filter(h -> h.value().matches(stack)).findFirst());
 	}
 
 	public static Optional<AmmoDefinition> ammo(HolderLookup.Provider registries, ResourceKey<AmmoDefinition> key) {

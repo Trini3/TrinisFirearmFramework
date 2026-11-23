@@ -5,11 +5,16 @@
 	"name": "Trini's Firearm Framework gametests",
 	"environment": "*",
 	"entrypoints": {
-		"main": ["io.github.trini3.tff.fabric.gametest.TffTestContent"],
+		"main": [
+			"io.github.trini3.tff.fabric.gametest.TffTestContent"
+		],
 		"fabric-gametest": [
 			"io.github.trini3.tff.fabric.gametest.TffSmokeGameTests",
-			"io.github.trini3.tff.fabric.gametest.GunGameTests"
+			"io.github.trini3.tff.fabric.gametest.GunGameTests",
+			"io.github.trini3.tff.fabric.gametest.AttachmentGameTests"
 		]
 	},
-	"depends": { "tff": "*" }
+	"depends": {
+		"tff": "*"
+	}
 }

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.trini3.tff.registry.TffRegistries;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -29,6 +30,7 @@ import net.minecraft.util.StringRepresentable;
  * @param muzzle             muzzle smoke
  * @param damageMultiplier   multiplies the ammo's damage
  * @param velocityMultiplier multiplies the ammo's speed
+ * @param attachments        attachments this gun accepts, per slot
  */
 public record GunDefinition(
 	List<ResourceKey<AmmoDefinition>> ammo,
@@ -42,7 +44,8 @@ public record GunDefinition(
 	Sounds sounds,
 	Muzzle muzzle,
 	float damageMultiplier,
-	float velocityMultiplier
+	float velocityMultiplier,
+	Map<AttachmentSlot, List<ResourceKey<AttachmentDefinition>>> attachments
 ) {
 	public static final Codec<GunDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
 		ExtraCodecs.nonEmptyList(ResourceKey.codec(TffRegistries.AMMO).listOf()).fieldOf("ammo").forGetter(GunDefinition::ammo),
@@ -56,8 +59,14 @@ public record GunDefinition(
 		Sounds.CODEC.optionalFieldOf("sounds", Sounds.NONE).forGetter(GunDefinition::sounds),
 		Muzzle.CODEC.optionalFieldOf("muzzle", Muzzle.DEFAULT).forGetter(GunDefinition::muzzle),
 		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("damage_multiplier", 1f).forGetter(GunDefinition::damageMultiplier),
-		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("velocity_multiplier", 1f).forGetter(GunDefinition::velocityMultiplier)
+		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("velocity_multiplier", 1f).forGetter(GunDefinition::velocityMultiplier),
+		Codec.unboundedMap(AttachmentSlot.CODEC, ResourceKey.codec(TffRegistries.ATTACHMENT).listOf())
+			.optionalFieldOf("attachments", Map.of()).forGetter(GunDefinition::attachments)
 	).apply(i, GunDefinition::new));
+
+	public boolean accepts(AttachmentSlot slot, ResourceKey<AttachmentDefinition> attachment) {
+		return this.attachments.getOrDefault(slot, List.of()).contains(attachment);
+	}
 
 	public enum FireMode implements StringRepresentable {
 		SEMI("semi"),

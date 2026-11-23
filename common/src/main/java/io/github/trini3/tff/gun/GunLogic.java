@@ -82,8 +82,8 @@ public final class GunLogic {
 			Tff.LOGGER.warn("Unknown projectile behavior {}, using tff:bullet", ammo.behavior());
 			return ProjectileBehavior.BULLET;
 		});
-		boolean aiming = GunItem.isAiming(player, player.getMainHandItem());
-		float spread = aiming ? gun.spread().aim() : gun.spread().hip();
+		ItemStack stack = player.getMainHandItem();
+		float spread = GunStats.spread(gun, stack, level.registryAccess(), GunItem.isAiming(player, stack));
 		Vec3 aim = Vec3.directionFromRotation(xRot, yRot);
 		Vec3 origin = player.getEyePosition();
 		RandomSource random = player.getRandom();
