@@ -1,0 +1,12 @@
+{
+  "item": "shotgun:shell",
+  "pellets": 8,
+  "damage": 2.0,
+  "min_damage": 0.5,
+  "falloff_start": 6,
+  "falloff_end": 24,
+  "speed": 4.5,
+  "gravity": 0.015,
+  "drag": 0.97,
+  "lifetime": 25
+}

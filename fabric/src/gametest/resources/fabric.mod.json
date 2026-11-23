@@ -12,6 +12,9 @@
 			"io.github.trini3.tff.fabric.gametest.TffSmokeGameTests",
 			"io.github.trini3.tff.fabric.gametest.GunGameTests",
 			"io.github.trini3.tff.fabric.gametest.AttachmentGameTests"
+		],
+		"fabric-client-gametest": [
+			"io.github.trini3.tff.fabric.gametest.ShotgunClientGameTest"
 		]
 	},
 	"depends": {
