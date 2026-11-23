@@ -1,0 +1,20 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}" apply false
+}
+
+subprojects {
+	apply plugin: 'java'
+
+	group = project.maven_group
+	version = "${project.mod_version}+${project.minecraft_version}"
+	base.archivesName = "${project.archives_base_name}-${project.name}"
+
+	java {
+		toolchain.languageVersion = JavaLanguageVersion.of(project.java_version as int)
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = 'UTF-8'
+		options.release = project.java_version as int
+	}
+}

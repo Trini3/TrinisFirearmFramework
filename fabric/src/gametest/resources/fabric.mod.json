@@ -1,0 +1,11 @@
+{
+	"schemaVersion": 1,
+	"id": "tff-gametest",
+	"version": "1.0.0",
+	"name": "Trini's Firearm Framework gametests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": ["io.github.trini3.tff.fabric.gametest.TffSmokeGameTests"]
+	},
+	"depends": { "tff": "*" }
+}
