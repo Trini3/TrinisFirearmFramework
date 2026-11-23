@@ -39,10 +39,15 @@ public final class TffRegistries {
 
 	/** Finds the attachment definition (and its key) whose item is {@code stack}. */
 	public static Optional<net.minecraft.core.Holder.Reference<AttachmentDefinition>> attachmentFor(HolderLookup.Provider registries, net.minecraft.world.item.ItemStack stack) {
+		return attachmentsFor(registries, stack).findFirst();
+	}
+
+	/** Every attachment {@code stack} can become. Several guns may share an item (a spyglass) with their own stats. */
+	public static java.util.stream.Stream<net.minecraft.core.Holder.Reference<AttachmentDefinition>> attachmentsFor(HolderLookup.Provider registries, net.minecraft.world.item.ItemStack stack) {
 		if (stack.isEmpty()) {
-			return Optional.empty();
+			return java.util.stream.Stream.empty();
 		}
-		return registries.lookup(ATTACHMENT).flatMap(l -> l.listElements().filter(h -> h.value().matches(stack)).findFirst());
+		return registries.lookup(ATTACHMENT).stream().flatMap(l -> l.listElements().filter(h -> h.value().matches(stack)));
 	}
 
 	public static Optional<AmmoDefinition> ammo(HolderLookup.Provider registries, ResourceKey<AmmoDefinition> key) {

@@ -2,6 +2,7 @@ package io.github.trini3.tff.fabric.gametest;
 
 import io.github.trini3.tff.bench.AttachmentLogic;
 import io.github.trini3.tff.client.GunClient;
+import io.github.trini3.tff.client.ScopeView;
 import io.github.trini3.tff.data.AttachmentSlot;
 import io.github.trini3.tff.gun.GunItem;
 import io.github.trini3.tff.testgun.TestShotgun;
@@ -14,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import com.mojang.blaze3d.platform.InputConstants;
 
 /**
@@ -85,13 +87,16 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			// Fit the scope (server side) and aim again.
 			world.getServer().runOnServer(server -> {
 				ServerPlayer player = server.getPlayerList().getPlayers().getFirst();
-				AttachmentLogic.fit(player.getMainHandItem(), AttachmentSlot.SCOPE, new ItemStack(TestShotgun.SCOPE.get()), server.registryAccess());
+				AttachmentLogic.fit(player.getMainHandItem(), AttachmentSlot.SCOPE, new ItemStack(Items.SPYGLASS), server.registryAccess());
 			});
 			context.waitTicks(5);
 			context.takeScreenshot("shotgun_scoped_hip");
 			context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
 			context.waitTicks(10);
 			context.takeScreenshot("shotgun_scoped_aiming");
+			if (!context.computeOnClient(mc -> ScopeView.isScoped(mc.player))) {
+				throw new AssertionError("Aiming with the spyglass scope did not open the scope view");
+			}
 			context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
 			context.waitTicks(5);
 

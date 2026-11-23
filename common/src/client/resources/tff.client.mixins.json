@@ -6,7 +6,10 @@
 	"client": [
 		"AbstractClientPlayerMixin",
 		"AvatarRendererMixin",
-		"MinecraftMixin"
+		"FirstPersonHandsAndItemsMixin",
+		"HudMixin",
+		"MinecraftMixin",
+		"MouseHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

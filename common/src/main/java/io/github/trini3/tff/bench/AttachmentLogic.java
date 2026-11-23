@@ -21,12 +21,13 @@ public final class AttachmentLogic {
 			return Optional.empty();
 		}
 		Optional<GunDefinition> definition = GunItem.definition(gun, registries);
-		Optional<Holder.Reference<AttachmentDefinition>> attachment = TffRegistries.attachmentFor(registries, item);
-		if (definition.isEmpty() || attachment.isEmpty()) {
+		if (definition.isEmpty()) {
 			return Optional.empty();
 		}
-		Holder.Reference<AttachmentDefinition> ref = attachment.get();
-		return ref.value().slot() == slot && definition.get().accepts(slot, ref.key()) ? attachment : Optional.empty();
+		// Several attachments can share an item; pick the one this gun accepts in this slot.
+		return TffRegistries.attachmentsFor(registries, item)
+			.filter(ref -> ref.value().slot() == slot && definition.get().accepts(slot, ref.key()))
+			.findFirst();
 	}
 
 	/** Fits {@code item}'s attachment to the gun. Returns false (and changes nothing) if not allowed. */
