@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "${mod_id}",
+	"version": "${version}",
+	"name": "${mod_name}",
+	"description": "A vanilla-styled, data-driven firearm framework. Content mods add guns and ammo through JSON.",
+	"authors": [
+		"Trini3"
+	],
+	"contact": {
+		"sources": "https://github.com/Trini3/TrinisFirearmFramework"
+	},
+	"license": "All-Rights-Reserved",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.trini3.tff.fabric.TffFabric"
+		],
+		"client": [
+			"io.github.trini3.tff.fabric.client.TffFabricClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"mixins": [
+		{
+			"config": "tff.client.mixins.json",
+			"environment": "client"
+		}
+	]
+}

@@ -1,0 +1,56 @@
+{
+  "item.shotgun.fire": {
+    "sounds": [
+      {
+        "name": "shotgun:item/shotgun/fire"
+      },
+      {
+        "name": "shotgun:item/shotgun/fire",
+        "pitch": 0.94
+      },
+      {
+        "name": "shotgun:item/shotgun/fire",
+        "pitch": 1.06
+      }
+    ],
+    "subtitle": "subtitles.shotgun.fire"
+  },
+  "item.shotgun.open": {
+    "sounds": [
+      {
+        "name": "shotgun:item/shotgun/open"
+      },
+      {
+        "name": "shotgun:item/shotgun/open",
+        "pitch": 0.96
+      },
+      {
+        "name": "shotgun:item/shotgun/open",
+        "pitch": 1.04
+      }
+    ],
+    "subtitle": "subtitles.shotgun.reload"
+  },
+  "item.shotgun.close": {
+    "sounds": [
+      {
+        "name": "shotgun:item/shotgun/close"
+      },
+      {
+        "name": "shotgun:item/shotgun/close",
+        "pitch": 0.96
+      },
+      {
+        "name": "shotgun:item/shotgun/close",
+        "pitch": 1.04
+      }
+    ],
+    "subtitle": "subtitles.shotgun.reload"
+  },
+  "item.shotgun.cock": {
+    "sounds": [
+      "shotgun:item/shotgun/cock"
+    ],
+    "subtitle": "subtitles.shotgun.cock"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "key.category.tff.firearms": "Firearms",
+  "key.tff.reload": "Reload",
+  "death.attack.tff.bullet": "%1$s was shot by %2$s",
+  "death.attack.tff.bullet.player": "%1$s was shot whilst trying to escape %2$s",
+  "death.attack.tff.bullet.item": "%1$s was shot by %2$s using %3$s",
+  "entity.tff.bullet": "Bullet",
+  "block.tff.attachment_bench": "Attachment Bench",
+  "container.tff.attachment_bench": "Attachment Bench",
+  "itemGroup.tff.firearms": "Firearms"
+}

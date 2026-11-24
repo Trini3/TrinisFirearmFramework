@@ -1,0 +1,15 @@
+pluginManagement {
+	repositories {
+		maven { name = 'Fabric'; url = 'https://maven.fabricmc.net/' }
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+rootProject.name = 'TrinisFirearmFramework'
+
+// common: loader-agnostic code compiled against vanilla Minecraft only (no Fabric/NeoForge imports).
+// fabric: Fabric entrypoints and loader glue; compiles the common sources into one jar.
+// A neoforge module can be added later next to fabric.
+include 'common'
+include 'fabric'

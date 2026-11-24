@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "P": "#minecraft:planks",
+    "T": "minecraft:tripwire_hook"
+  },
+  "pattern": [
+    "III",
+    " TP",
+    "  P"
+  ],
+  "result": {
+    "id": "shotgun:shotgun"
+  }
+}

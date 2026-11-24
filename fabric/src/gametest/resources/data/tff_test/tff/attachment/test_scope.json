@@ -1,0 +1,7 @@
+{
+  "item": "minecraft:spyglass",
+  "slot": "scope",
+  "zoom": 0.5,
+  "aim_spread_multiplier": 0.5,
+  "recoil_multiplier": 0.8
+}
