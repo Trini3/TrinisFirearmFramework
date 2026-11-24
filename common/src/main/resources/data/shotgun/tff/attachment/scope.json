@@ -4,5 +4,6 @@
   "zoom": 0.35,
   "aim_spread_multiplier": 0.8,
   "recoil_multiplier": 0.9,
-  "overlay": "shotgun:misc/scope_overlay"
+  "overlay": "minecraft:misc/spyglass_scope",
+  "reticle": "shotgun:misc/scope_reticle"
 }

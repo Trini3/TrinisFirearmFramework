@@ -21,15 +21,18 @@ import net.minecraft.world.item.ItemStack;
  * @param overlay             optional scope view, like the spyglass's: a texture id resolved as
  *                            {@code <ns>:textures/<path>.png}. While aiming, it is drawn over the
  *                            screen, the gun is hidden and mouse speed scales with the zoom.
+ *                            {@code minecraft:misc/spyglass_scope} reuses the spyglass's own view.
+ * @param reticle             optional texture drawn over the overlay, stretched to the same square
  */
-public record AttachmentDefinition(Holder<Item> item, AttachmentSlot slot, Optional<Float> zoom, float aimSpreadMultiplier, float recoilMultiplier, Optional<Identifier> overlay) {
+public record AttachmentDefinition(Holder<Item> item, AttachmentSlot slot, Optional<Float> zoom, float aimSpreadMultiplier, float recoilMultiplier, Optional<Identifier> overlay, Optional<Identifier> reticle) {
 	public static final Codec<AttachmentDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
 		Item.CODEC.fieldOf("item").forGetter(AttachmentDefinition::item),
 		AttachmentSlot.CODEC.fieldOf("slot").forGetter(AttachmentDefinition::slot),
 		Codec.floatRange(0.05f, 1f).optionalFieldOf("zoom").forGetter(AttachmentDefinition::zoom),
 		Codec.floatRange(0f, 4f).optionalFieldOf("aim_spread_multiplier", 1f).forGetter(AttachmentDefinition::aimSpreadMultiplier),
 		Codec.floatRange(0f, 4f).optionalFieldOf("recoil_multiplier", 1f).forGetter(AttachmentDefinition::recoilMultiplier),
-		Identifier.CODEC.optionalFieldOf("overlay").forGetter(AttachmentDefinition::overlay)
+		Identifier.CODEC.optionalFieldOf("overlay").forGetter(AttachmentDefinition::overlay),
+		Identifier.CODEC.optionalFieldOf("reticle").forGetter(AttachmentDefinition::reticle)
 	).apply(i, AttachmentDefinition::new));
 
 	public boolean matches(ItemStack stack) {

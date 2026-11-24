@@ -1,8 +1,8 @@
 """Generates the test scope textures (original pixel art). Run: python3 tools/textures/gen_scope.py
 
 The scope is a vanilla spyglass fitted at the attachment bench, so the mounted scope uses a
-spyglass-like copper and glass palette, and the scope view is the spyglass view's style with
-rounded corners and a rustic sniper reticle.
+spyglass-like copper and glass palette. The scope view is vanilla's own spyglass view with a
+rustic sniper reticle drawn on top.
 """
 import os
 from PIL import Image
@@ -31,53 +31,22 @@ def model_texture():
     img.save(os.path.join(ASSETS, "item", "scope.png"))
 
 
-def overlay_texture():
-    """The scope view (textures/misc/scope_overlay.png).
+def reticle_texture():
+    """The scope reticle (textures/misc/scope_reticle.png), drawn over vanilla's own spyglass view.
 
-    Drawn in the style of vanilla's spyglass view: the same 8-texel dark and copper frame bands
-    (shaded top/left, lit bottom/right), the blue glass edge and a faint mottled glass tint, but
-    with rounded corners and an old-fashioned three-post sniper reticle. Odd size so the reticle
-    has a true centre pixel.
+    An old-fashioned three-post sniper reticle: thick tapered posts from the left, right and
+    bottom, the bottom one coming to a point at the centre (where the gun aims). Everything else
+    is transparent. It is stretched over the same square as the spyglass view, so the posts stop
+    at the spyglass glass edge (16 of 256 texels in). Odd size so there is a true centre pixel.
     """
     size, c = 255, 127
-    radius = 44
+    stop = 16
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     px = img.load()
-    shade = [(49, 30, 10), (64, 41, 16)]       # outer, inner band on the top/left
-    lit = [(64, 41, 16), (125, 80, 20)]        # outer, inner band on the bottom/right
-    edge = [(30, 63, 88, 238), (45, 78, 121, 204), (69, 98, 147, 120), (131, 186, 223, 39)]
-    tints = [(100, 130, 163, 13), (130, 163, 199, 13), (115, 150, 185, 20)]
-
-    half = size / 2
-    for y in range(size):
-        for x in range(size):
-            # Distance inside a rounded square, and which way its edge faces here.
-            qx, qy = abs(x + 0.5 - half) - (half - radius), abs(y + 0.5 - half) - (half - radius)
-            if qx > 0 and qy > 0:
-                d = radius - (qx * qx + qy * qy) ** 0.5
-                nx, ny = qx * (1 if x >= c else -1), qy * (1 if y >= c else -1)
-            else:
-                d = radius - max(qx, qy)
-                nx, ny = (qx * (1 if x >= c else -1), 0) if qx > qy else (0, qy * (1 if y >= c else -1))
-            if d < 0:
-                px[x, y] = (0, 0, 0, 255)  # same black as around the square
-                continue
-            bands = lit if nx + ny > 0 else shade
-            if d < 8:
-                px[x, y] = bands[0] + (255,)
-            elif d < 16:
-                px[x, y] = bands[1] + (255,)
-            elif d < 20:
-                px[x, y] = edge[int(d) - 16]
-            else:
-                px[x, y] = tints[((x // 32) * 7 + (y // 32) * 3) % 3]  # mottled glass, like the spyglass
-
-    # Three-post reticle (old military style): thick tapered posts from the left, right and
-    # bottom; the bottom post comes to a point at the centre, which is where the gun aims.
     ink = (30, 22, 16, 240)
 
     def put(x, y):
-        if 0 <= x < size and 0 <= y < size and px[x, y][3] < 200:
+        if stop <= x < size - stop and stop <= y < size - stop:
             px[x, y] = ink
 
     def width(r, tip):
@@ -97,9 +66,9 @@ def overlay_texture():
             put(c + t, c + r)
 
     os.makedirs(os.path.join(ASSETS, "misc"), exist_ok=True)
-    img.save(os.path.join(ASSETS, "misc", "scope_overlay.png"))
+    img.save(os.path.join(ASSETS, "misc", "scope_reticle.png"))
 
 
 if __name__ == "__main__":
     model_texture()
-    overlay_texture()
+    reticle_texture()

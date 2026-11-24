@@ -48,7 +48,11 @@ public final class ScopeView {
 		return activeScope(player).map(a -> (double) a.zoom().orElse(1f)).orElse(1.0);
 	}
 
-	/** Draws the overlay, copying vanilla's spyglass layout: a square that grows in, black around it. */
+	private static Identifier texture(Identifier id) {
+		return id.withPath(p -> "textures/" + p + ".png");
+	}
+
+	/** Draws the overlay (and the reticle on top), copying vanilla's spyglass layout: a square that grows in, black around it. */
 	public static void extract(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
 		Optional<AttachmentDefinition> scope = activeScope(Minecraft.getInstance().player);
 		if (scope.isEmpty()) {
@@ -56,13 +60,15 @@ public final class ScopeView {
 			return;
 		}
 		scale = Mth.lerp(0.5f * deltaTracker.getGameTimeDeltaTicks(), scale, 1.125f);
-		Identifier texture = scope.get().overlay().orElseThrow().withPath(p -> "textures/" + p + ".png");
+		Identifier texture = texture(scope.get().overlay().orElseThrow());
 		int size = Mth.floor(Math.min(graphics.guiWidth(), graphics.guiHeight()) * scale);
 		int left = (graphics.guiWidth() - size) / 2;
 		int top = (graphics.guiHeight() - size) / 2;
 		int right = left + size;
 		int bottom = top + size;
 		graphics.blit(RenderPipelines.GUI_TEXTURED, texture, left, top, 0f, 0f, size, size, size, size);
+		scope.get().reticle().ifPresent(reticle ->
+			graphics.blit(RenderPipelines.GUI_TEXTURED, texture(reticle), left, top, 0f, 0f, size, size, size, size));
 		graphics.fill(RenderPipelines.GUI, 0, bottom, graphics.guiWidth(), graphics.guiHeight(), 0xFF000000);
 		graphics.fill(RenderPipelines.GUI, 0, 0, graphics.guiWidth(), top, 0xFF000000);
 		graphics.fill(RenderPipelines.GUI, 0, top, left, bottom, 0xFF000000);
