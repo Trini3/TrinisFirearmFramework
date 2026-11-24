@@ -1,8 +1,8 @@
 """Generates the test scope textures (original pixel art). Run: python3 tools/textures/gen_scope.py
 
 The scope is a vanilla spyglass fitted at the attachment bench, so the mounted scope uses a
-spyglass-like copper and glass palette, and the scope view is a square frame in the style of the
-spyglass overlay with a reticle on the glass.
+spyglass-like copper and glass palette, and the scope view is the spyglass view's style with
+rounded corners and a rustic sniper reticle.
 """
 import os
 from PIL import Image
@@ -32,56 +32,69 @@ def model_texture():
 
 
 def overlay_texture():
-    """The scope view (textures/misc/scope_overlay.png). Odd size so the reticle has a true centre pixel."""
-    size, c = 255, 127
-    img = Image.new("RGBA", (size, size), (100, 130, 163, 13))  # faint glass tint, like the spyglass
-    px = img.load()
+    """The scope view (textures/misc/scope_overlay.png).
 
-    # Frame: dark outer band, copper inner band with a lit top/left and shaded bottom/right edge.
+    Drawn in the style of vanilla's spyglass view: the same 8-texel dark and copper frame bands
+    (shaded top/left, lit bottom/right), the blue glass edge and a faint mottled glass tint, but
+    with rounded corners and an old-fashioned three-post sniper reticle. Odd size so the reticle
+    has a true centre pixel.
+    """
+    size, c = 255, 127
+    radius = 44
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    px = img.load()
+    shade = [(49, 30, 10), (64, 41, 16)]       # outer, inner band on the top/left
+    lit = [(64, 41, 16), (125, 80, 20)]        # outer, inner band on the bottom/right
+    edge = [(30, 63, 88, 238), (45, 78, 121, 204), (69, 98, 147, 120), (131, 186, 223, 39)]
+    tints = [(100, 130, 163, 13), (130, 163, 199, 13), (115, 150, 185, 20)]
+
+    half = size / 2
     for y in range(size):
         for x in range(size):
-            d = min(x, y, size - 1 - x, size - 1 - y)
-            if d < 4:
-                px[x, y] = DARK[0] + (255,)
-            elif d < 8:
-                lit = x < size - 8 and y < size - 8 and (x == d or y == d)
-                px[x, y] = (COPPER[3] if lit else COPPER[1 + (d == 7)]) + (255,)
-            elif d == 8:
-                px[x, y] = (30, 63, 88, 238)
+            # Distance inside a rounded square, and which way its edge faces here.
+            qx, qy = abs(x + 0.5 - half) - (half - radius), abs(y + 0.5 - half) - (half - radius)
+            if qx > 0 and qy > 0:
+                d = radius - (qx * qx + qy * qy) ** 0.5
+                nx, ny = qx * (1 if x >= c else -1), qy * (1 if y >= c else -1)
+            else:
+                d = radius - max(qx, qy)
+                nx, ny = (qx * (1 if x >= c else -1), 0) if qx > qy else (0, qy * (1 if y >= c else -1))
+            if d < 0:
+                px[x, y] = (0, 0, 0, 255)  # same black as around the square
+                continue
+            bands = lit if nx + ny > 0 else shade
+            if d < 8:
+                px[x, y] = bands[0] + (255,)
+            elif d < 16:
+                px[x, y] = bands[1] + (255,)
+            elif d < 20:
+                px[x, y] = edge[int(d) - 16]
+            else:
+                px[x, y] = tints[((x // 32) * 7 + (y // 32) * 3) % 3]  # mottled glass, like the spyglass
 
-    ink = (24, 22, 26, 235)
-    inner, gap, outer = 3, 2, 44  # thin line from gap..outer, thick posts from outer to the frame
+    # Three-post reticle (old military style): thick tapered posts from the left, right and
+    # bottom; the bottom post comes to a point at the centre, which is where the gun aims.
+    ink = (30, 22, 16, 240)
 
-    def put(x, y, col=ink):
-        if 9 <= x < size - 9 and 9 <= y < size - 9:
-            px[x, y] = col
+    def put(x, y):
+        if 0 <= x < size and 0 <= y < size and px[x, y][3] < 200:
+            px[x, y] = ink
 
-    for i in range(9, size - 9):
-        r = abs(i - c)
-        if r <= gap:
-            continue
-        w = 1 if r < outer else inner  # duplex: thin near the centre, heavy posts outside
-        for t in range(-(w // 2), w // 2 + 1):
-            put(i, c + t)
-            put(c + t, i)
+    def width(r, tip):
+        """Post half-width at distance r from the centre: a point at the tip, 3 wide soon after, 7 wide outside."""
+        if r < tip + 6:
+            return (r - tip) // 3
+        return 1 if r < 64 else 3
 
-    # Range marks outside the ring: a short tick, then a longer one.
-    for r in (26, 36):
-        half = 3 if r == 36 else 2
-        for t in range(-half, half + 1):
-            put(c + r, c + t)
+    for r in range(14, c + 1):
+        w = width(r, 14)
+        for t in range(-w, w + 1):
             put(c - r, c + t)
+            put(c + r, c + t)
+    for r in range(0, c + 1):
+        w = width(r, 0)
+        for t in range(-w, w + 1):
             put(c + t, c + r)
-            put(c + t, c - r)
-
-    # Ring around the centre and a red aiming dot.
-    for y in range(c - 20, c + 21):
-        for x in range(c - 20, c + 21):
-            d = ((x - c) ** 2 + (y - c) ** 2) ** 0.5
-            if 15.5 <= d < 16.5:
-                put(x, y, (24, 22, 26, 200))
-    for x, y in [(c, c), (c - 1, c), (c + 1, c), (c, c - 1), (c, c + 1)]:
-        put(x, y, (0xd8, 0x2a, 0x1e, 255))
 
     os.makedirs(os.path.join(ASSETS, "misc"), exist_ok=True)
     img.save(os.path.join(ASSETS, "misc", "scope_overlay.png"))
