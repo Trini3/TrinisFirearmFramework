@@ -1,0 +1,8 @@
+{
+	"entities": [
+		"minecraft:snow_golem"
+	],
+	"boxes": [
+		{"from": [-16, 20, -16], "to": [16, 40, 16]}
+	]
+}

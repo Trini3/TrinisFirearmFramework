@@ -1,6 +1,7 @@
 package io.github.trini3.tff.projectile;
 
 import io.github.trini3.tff.api.ProjectileBehavior;
+import io.github.trini3.tff.config.TffConfig;
 import io.github.trini3.tff.data.AmmoDefinition;
 import io.github.trini3.tff.gun.GunMath;
 import io.github.trini3.tff.registry.TffDamageTypes;
@@ -152,11 +153,32 @@ public class BulletEntity extends Projectile {
 		return GunMath.falloff(this.position().distanceTo(this.origin), this.damage, this.minDamage, this.falloffStart, this.falloffEnd);
 	}
 
-	/** Deals this bullet's damage to {@code target}. Bullet damage is tagged {@code minecraft:bypasses_cooldown}, so every pellet counts. */
+	/**
+	 * Deals this bullet's damage to the entity it hit, times the config's headshot multiplier when
+	 * it hit a head ({@link Headshots}). A headshot throws a few critical-hit sparks.
+	 */
+	public boolean damage(ServerLevel level, EntityHitResult hit) {
+		Entity target = hit.getEntity();
+		boolean headshot = Headshots.isHeadshot(level.registryAccess(), target, hit.getLocation());
+		float amount = this.currentDamage() * (headshot ? TffConfig.get().headshotMultiplier() : 1f);
+		boolean hurt = this.hurt(level, target, amount);
+		if (hurt && headshot) {
+			Vec3 at = hit.getLocation();
+			level.sendParticles(ParticleTypes.CRIT, at.x, at.y, at.z, 6, 0.05, 0.05, 0.05, 0.25);
+		}
+		return hurt;
+	}
+
+	/** Deals this bullet's damage to {@code target}, with no headshot check (for behaviours that hurt things nearby). */
 	public boolean damage(ServerLevel level, Entity target) {
+		return this.hurt(level, target, this.currentDamage());
+	}
+
+	/** Bullet damage is tagged {@code minecraft:bypasses_cooldown}, so every pellet counts. */
+	private boolean hurt(ServerLevel level, Entity target, float amount) {
 		DamageSource source = new DamageSource(
 			level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(TffDamageTypes.BULLET), this, this.getOwner());
-		boolean hurt = target.hurtServer(level, source, this.currentDamage());
+		boolean hurt = target.hurtServer(level, source, amount);
 		if (hurt) {
 			EnchantmentHelper.doPostAttackEffects(level, target, source);
 		}

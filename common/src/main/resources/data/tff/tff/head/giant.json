@@ -1,0 +1,8 @@
+{
+	"entities": [
+		"minecraft:giant"
+	],
+	"boxes": [
+		{"from": [-48, 144, -48], "to": [48, 240, 48]}
+	]
+}

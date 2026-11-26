@@ -1,0 +1,9 @@
+{
+	"entities": [
+		"minecraft:cow",
+		"minecraft:mooshroom"
+	],
+	"boxes": [
+		{"from": [-5, 16, 6.5], "to": [5, 32, 24]}
+	]
+}

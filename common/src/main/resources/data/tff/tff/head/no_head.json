@@ -1,0 +1,32 @@
+{
+	"entities": [
+		"minecraft:slime",
+		"minecraft:magma_cube",
+		"minecraft:sulfur_cube",
+		"minecraft:ghast",
+		"minecraft:happy_ghast",
+		"minecraft:shulker",
+		"minecraft:guardian",
+		"minecraft:elder_guardian",
+		"minecraft:squid",
+		"minecraft:glow_squid",
+		"minecraft:strider",
+		"minecraft:armadillo",
+		"minecraft:nautilus",
+		"minecraft:zombie_nautilus",
+		"minecraft:frog",
+		"minecraft:tadpole",
+		"minecraft:bee",
+		"minecraft:parrot",
+		"minecraft:bat",
+		"minecraft:silverfish",
+		"minecraft:endermite",
+		"minecraft:cod",
+		"minecraft:salmon",
+		"minecraft:pufferfish",
+		"minecraft:tropical_fish",
+		"minecraft:armor_stand",
+		"minecraft:ender_dragon"
+	],
+	"boxes": []
+}

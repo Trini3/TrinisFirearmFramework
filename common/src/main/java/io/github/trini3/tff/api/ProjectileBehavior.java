@@ -16,9 +16,12 @@ public interface ProjectileBehavior {
 	/** Called every server tick before the projectile moves. */
 	default void tick(BulletEntity bullet, ServerLevel level) {}
 
-	/** Called when the projectile hits an entity. The default damages it and handles pierce. */
+	/**
+	 * Called when the projectile hits an entity. The default damages it (more for a headshot, see
+	 * {@link BulletEntity#damage(ServerLevel, EntityHitResult)}) and handles pierce.
+	 */
 	default void onHitEntity(BulletEntity bullet, ServerLevel level, EntityHitResult hit) {
-		bullet.damage(level, hit.getEntity());
+		bullet.damage(level, hit);
 		bullet.consumePierce(hit.getEntity());
 	}
 

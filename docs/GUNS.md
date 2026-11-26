@@ -334,3 +334,44 @@ practice that means:
   a new gun.
 - A part whose `bone` isn't in the animation file is drawn still. A missing or broken animation
   file leaves the whole gun still and without arms, and the log says what failed to load.
+
+## Headshots
+
+A bullet that hits a head does the server config's `headshot_multiplier` times its damage (1.5 by
+default, in `config/tff.json`; 1 turns headshots off). Head files, `data/<ns>/tff/head/<name>.json`,
+say where heads are. The framework ships them for every vanilla mob in `data/tff/tff/head/`; a mod
+that adds mobs adds its own.
+
+```json
+{
+	"entities": ["minecraft:cow", "minecraft:mooshroom"],
+	"boxes": [
+		{"from": [-5, 16, 6.5], "to": [5, 32, 24]}
+	]
+}
+```
+
+| Field | Default | Meaning |
+|---|---|---|
+| `entities` | required | A mob id, a list of them, or a `#tag` |
+| `boxes` | required | Head boxes, each from one corner to the opposite one. An empty list means the mob has no head (slimes, ghasts) |
+| `baby_boxes` | `boxes`, shrunk | Boxes for babies, for mobs whose babies have a model of their own with a bigger head |
+
+- Boxes are in pixels from the middle of the mob's feet: `x` to its left, `y` up and `z` forward,
+  the way its body faces. They turn with the body and are written for the mob at its normal size
+  (for `baby_boxes`, the baby's). On a bigger or smaller mob, such as one with the scale attribute,
+  a baby without `baby_boxes` or a crouching player, they stretch with its hitbox.
+- What counts is the point where the bullet first touches the hitbox, and that point is always on
+  the hitbox's surface. So a box has to reach past the hitbox on every side the head can be shot
+  from. The zombie's box covers the whole width of its hitbox from 24 px up and goes past the top,
+  so shots from the front, back, sides and above all count. A cow's head sticks out in front of its
+  hitbox, so its box starts just inside the front face and only hits on that face count.
+- Numbers come from the mob's model: a model point at height `y` (pivot included) is `24 - y`
+  pixels above the feet, and the model's `-z` is forward. Multiply by the renderer's scale if it
+  scales the model (a wither is drawn at 2x).
+- A mob in no head file is taken to have its head on top: everything from a little below its eyes
+  (12 % of its height) up. The ender dragon's head part always counts. Mobs that are sleeping,
+  swimming, crawling, gliding with elytra or riptide-spinning take no headshots.
+- If two files list the same mob, the one whose id sorts last wins. A datapack can override a file
+  by adding its own under a later name, or replace it by using the same id
+  (`data/tff/tff/head/humanoid.json` for zombies and skeletons).

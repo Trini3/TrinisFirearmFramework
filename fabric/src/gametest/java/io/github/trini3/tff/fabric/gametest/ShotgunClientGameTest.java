@@ -5,6 +5,7 @@ import io.github.trini3.tff.bench.AttachmentLogic;
 import io.github.trini3.tff.client.ScopeView;
 import io.github.trini3.tff.client.gun.GunInput;
 import io.github.trini3.tff.client.gun.LocalGun;
+import io.github.trini3.tff.config.TffConfig;
 import io.github.trini3.tff.data.AttachmentSlot;
 import io.github.trini3.tff.gun.GunItem;
 import io.github.trini3.tff.testgun.TestShotgun;
@@ -17,9 +18,12 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,7 +33,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * In-game pass over the test shotgun: reload, fire, aim, scope, third person, left-handed, a
- * buckshot range check on zombies at 50 and 70 blocks and the attachment bench, with screenshots of each animation at several moments for a visual check. Run
+ * buckshot range check on zombies at 50 and 70 blocks, a headshot against a body shot and the
+ * attachment bench, with screenshots of each animation at several moments for a visual check. Run
  * on demand with {@code ./gradlew :fabric:runClientGameTest} (needs a display; see
  * docs/KNOWN_ISSUES.md). Not part of {@code build}.
  *
@@ -151,8 +156,22 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			rangeShot(context, world, 70, false);
 			reload(context);
 
-			// Left-handed: everything mirrors.
+			// Headshots, from the hip with the scope off so the zombie and the sparks show: the same
+			// shot at 8 blocks does the config's multiplier more damage to the head than to the body.
+			// The hip spread (1 degree) and the pattern stay inside the head or the body there.
 			world.getServer().runOnServer(server -> AttachmentLogic.remove(player(server).getMainHandItem(), AttachmentSlot.SCOPE));
+			world.getServer().runCommand("kill @e[type=item]");
+			context.waitTicks(EQUIP_TICKS);
+			float body = shotDamage(context, world, 8, 1.0, "body_shot");
+			reload(context);
+			float head = shotDamage(context, world, 8, 1.72, "headshot");
+			reload(context);
+			float multiplier = TffConfig.get().headshotMultiplier();
+			System.out.println("Headshot check at 8 blocks: body shot " + body + ", headshot " + head + ", multiplier " + multiplier);
+			check(body > 40f, "Expected all 9 pellets in the body at 8 blocks, damage " + body);
+			check(Math.abs(head - body * multiplier) < 1f, "Headshot did " + head + ", body shot " + body + ", multiplier " + multiplier);
+
+			// Left-handed: everything mirrors.
 			setMainHand(context, HumanoidArm.LEFT);
 			context.waitTicks(EQUIP_TICKS);
 			context.takeScreenshot("left_hip");
@@ -235,8 +254,9 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 	 */
 	private static void rangeShot(ClientGameTestContext context, TestSingleplayerContext world, int blocks, boolean expectKill) {
 		BlockPos at = world.getServer().computeOnServer(server -> player(server).blockPosition().south(blocks));
-		world.getServer().runCommand("summon zombie " + at.getX() + " " + at.getY() + " " + at.getZ() + " {NoAI:1b,PersistenceRequired:1b}");
+		// Shade first: a zombie that ticks once in full sun can catch fire.
 		world.getServer().runCommand("setblock " + at.getX() + " " + (at.getY() + 2) + " " + at.getZ() + " stone");
+		world.getServer().runCommand("summon zombie " + at.getX() + " " + at.getY() + " " + at.getZ() + " {NoAI:1b,PersistenceRequired:1b}");
 		context.waitTicks(10);
 		float[] rot = world.getServer().computeOnServer(server -> {
 			Zombie zombie = zombieNear(server, at);
@@ -268,6 +288,51 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 		world.getServer().runCommand("kill @e[type=zombie]");
 		world.getServer().runCommand("setblock " + at.getX() + " " + (at.getY() + 2) + " " + at.getZ() + " air");
 		context.waitTicks(5);
+	}
+
+	/**
+	 * Stands a 200-health zombie {@code blocks} south, facing the player, aims from the hip at
+	 * {@code height} blocks above its feet and fires once. Returns the damage done.
+	 */
+	private static float shotDamage(ClientGameTestContext context, TestSingleplayerContext world, int blocks, double height, String name) {
+		BlockPos at = world.getServer().computeOnServer(server -> player(server).blockPosition().south(blocks));
+		world.getServer().runCommand("setblock " + at.getX() + " " + (at.getY() + 2) + " " + at.getZ() + " stone");
+		world.getServer().runCommand("summon zombie " + at.getX() + " " + at.getY() + " " + at.getZ() + " {NoAI:1b,PersistenceRequired:1b,Rotation:[180f,0f]}");
+		context.waitTicks(10);
+		float[] rot = world.getServer().computeOnServer(server -> {
+			Zombie zombie = zombieNear(server, at);
+			if (zombie == null) {
+				return null;
+			}
+			zombie.getAttribute(Attributes.MAX_HEALTH).setBaseValue(200.0);
+			zombie.setHealth(200f);
+			// Pellets knock it back out of the shade; keep it there, and unburnt either way.
+			zombie.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
+			zombie.clearFire();
+			zombie.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0, false, false));
+			Vec3 d = zombie.position().add(0, height, 0).subtract(player(server).getEyePosition());
+			return new float[] {(float) Math.toDegrees(Math.atan2(-d.x, d.z)), (float) -Math.toDegrees(Math.atan2(d.y, d.horizontalDistance()))};
+		});
+		check(rot != null, "No zombie at " + blocks + " blocks");
+		context.getInput().lookAt(rot[0], rot[1]);
+		context.waitTicks(10);
+		context.takeScreenshot(name + "_aim");
+		context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
+		context.waitTicks(1);
+		context.takeScreenshot(name + "_t1");
+		context.waitTicks(1);
+		context.takeScreenshot(name + "_t2");
+		context.waitTicks(2);
+		context.takeScreenshot(name + "_t4");
+		context.waitTicks(10);
+		float health = world.getServer().computeOnServer(server -> {
+			Zombie zombie = zombieNear(server, at);
+			return zombie == null || !zombie.isAlive() ? 0f : zombie.getHealth();
+		});
+		world.getServer().runCommand("kill @e[type=zombie]");
+		world.getServer().runCommand("setblock " + at.getX() + " " + (at.getY() + 2) + " " + at.getZ() + " air");
+		context.waitTicks(5);
+		return 200f - health;
 	}
 
 	private static @Nullable Zombie zombieNear(MinecraftServer server, BlockPos at) {

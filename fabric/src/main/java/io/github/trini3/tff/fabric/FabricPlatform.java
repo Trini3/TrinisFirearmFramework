@@ -2,6 +2,7 @@ package io.github.trini3.tff.fabric;
 
 import com.mojang.serialization.Codec;
 import io.github.trini3.tff.platform.TffPlatform;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -10,6 +11,7 @@ import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -57,5 +59,10 @@ public final class FabricPlatform implements TffPlatform {
 	@Override
 	public <T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> factory) {
 		return new MenuType<>(factory::apply, FeatureFlags.VANILLA_SET);
+	}
+
+	@Override
+	public Path configDir() {
+		return FabricLoader.getInstance().getConfigDir();
 	}
 }

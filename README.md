@@ -45,4 +45,16 @@ The test shotgun (`io.github.trini3.tff.testgun`, `assets/shotgun`, `data/shotgu
 Controls: left click fires, right click aims down sights, R reloads (rebindable under Controls > Firearms).
 Scopes are fitted at the Attachment Bench; the test shotgun's scope is a spyglass.
 
+## Config
+
+`config/tff.json` is created the first time the game starts:
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `headshot_multiplier` | 1.5 | Damage multiplier for a bullet that hits a head (0 to 100; 1 turns headshots off) |
+
+It is read again whenever a world or server starts, so edits apply without restarting the game.
+It is a server setting: in multiplayer, the server's file counts. Where each mob's head is comes
+from data files, see [docs/GUNS.md](docs/GUNS.md#headshots).
+
 See [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) for pitfalls and design decisions.

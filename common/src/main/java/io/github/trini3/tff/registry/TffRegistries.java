@@ -4,6 +4,7 @@ import io.github.trini3.tff.Tff;
 import io.github.trini3.tff.data.AmmoDefinition;
 import io.github.trini3.tff.data.AttachmentDefinition;
 import io.github.trini3.tff.data.GunDefinition;
+import io.github.trini3.tff.data.HeadDefinition;
 import io.github.trini3.tff.platform.TffPlatform;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -14,14 +15,16 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Datapack registries for gun, ammo and attachment definitions. Files live at
- * {@code data/<namespace>/tff/gun/<name>.json}, {@code .../tff/ammo/<name>.json} and
- * {@code .../tff/attachment/<name>.json} and are synced to clients.
+ * Datapack registries for gun, ammo, attachment and head definitions. Files live at
+ * {@code data/<namespace>/tff/gun/<name>.json}, {@code .../tff/ammo/<name>.json},
+ * {@code .../tff/attachment/<name>.json} and {@code .../tff/head/<name>.json} and are synced to
+ * clients.
  */
 public final class TffRegistries {
 	public static final ResourceKey<Registry<GunDefinition>> GUN = ResourceKey.createRegistryKey(Tff.id("gun"));
 	public static final ResourceKey<Registry<AmmoDefinition>> AMMO = ResourceKey.createRegistryKey(Tff.id("ammo"));
 	public static final ResourceKey<Registry<AttachmentDefinition>> ATTACHMENT = ResourceKey.createRegistryKey(Tff.id("attachment"));
+	public static final ResourceKey<Registry<HeadDefinition>> HEAD = ResourceKey.createRegistryKey(Tff.id("head"));
 
 	private TffRegistries() {}
 
@@ -30,6 +33,7 @@ public final class TffRegistries {
 		TffPlatform.INSTANCE.registerSyncedDataRegistry(AMMO, AmmoDefinition.CODEC);
 		TffPlatform.INSTANCE.registerSyncedDataRegistry(ATTACHMENT, AttachmentDefinition.CODEC);
 		TffPlatform.INSTANCE.registerSyncedDataRegistry(GUN, GunDefinition.CODEC);
+		TffPlatform.INSTANCE.registerSyncedDataRegistry(HEAD, HeadDefinition.CODEC);
 	}
 
 	public static Optional<GunDefinition> gun(HolderLookup.Provider registries, ResourceKey<GunDefinition> key) {

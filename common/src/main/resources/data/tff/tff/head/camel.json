@@ -1,0 +1,9 @@
+{
+	"entities": [
+		"minecraft:camel",
+		"minecraft:camel_husk"
+	],
+	"boxes": [
+		{"from": [-4, 34, 12], "to": [4, 56, 48]}
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"entities": [
+		"minecraft:chicken"
+	],
+	"boxes": [
+		{"from": [-2, 9, 1], "to": [2, 24, 24]}
+	]
+}

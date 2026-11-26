@@ -1,6 +1,7 @@
 package io.github.trini3.tff.platform;
 
 import com.mojang.serialization.Codec;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.BiConsumer;
@@ -49,4 +50,7 @@ public interface TffPlatform {
 
 	/** Creates a menu type for a menu with no extra opening data. */
 	<T extends AbstractContainerMenu> MenuType<T> createMenuType(BiFunction<Integer, Inventory, T> factory);
+
+	/** The folder config files go in ({@code config/} in the game folder). */
+	Path configDir();
 }
