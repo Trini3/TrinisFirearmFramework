@@ -2,7 +2,7 @@
   "ammo": [
     "shotgun:buckshot"
   ],
-  "capacity": 2,
+  "capacity": 1,
   "fire_mode": "semi",
   "fire_interval": 6,
   "reload": {
@@ -16,8 +16,8 @@
     ]
   },
   "spread": {
-    "hip": 7,
-    "aim": 4.5
+    "hip": 1,
+    "aim": 0
   },
   "recoil": {
     "pitch": 6,

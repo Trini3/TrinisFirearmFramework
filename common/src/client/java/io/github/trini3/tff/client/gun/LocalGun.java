@@ -42,7 +42,6 @@ public final class LocalGun {
 	private static final int END_SLACK = 3;
 	private static final float AIM_SECONDS = 0.2f;
 	private static final float SPRINT_SECONDS = 0.25f;
-	private static final float EMPTY_SECONDS = 0.2f;
 	private static final float CANCEL_FADE_SECONDS = 0.2f;
 	private static final long NEVER = Long.MIN_VALUE / 4;
 
@@ -311,7 +310,7 @@ public final class LocalGun {
 		aimRamp = approach(aimRamp, aiming ? 1f : 0f, dt / AIM_SECONDS);
 		sprintRamp = approach(sprintRamp, sprinting ? 1f : 0f, dt / SPRINT_SECONDS);
 		// The empty pose snaps in (a hammer falls at once) but eases out (it is drawn back).
-		emptyRamp = empty ? 1f : approach(emptyRamp, 0f, dt / EMPTY_SECONDS);
+		emptyRamp = empty ? 1f : approach(emptyRamp, 0f, dt / GunView.EMPTY_FADE_SECONDS);
 
 		view.clear();
 		view.aim = Easing.IN_OUT_SINE.apply(aimRamp);

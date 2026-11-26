@@ -59,7 +59,7 @@ public final class RemoteGuns {
 		view.clear();
 		boolean aiming = GunItem.isAiming(owner, stack);
 		view.aim = aiming ? 1f : 0f;
-		view.empty = state.rounds() <= 0 && !state.reloading() ? 1f : 0f;
+		view.empty = emptyBlend(state, gameTime, partialTick);
 		if (entry.shotTime > Double.NEGATIVE_INFINITY) {
 			view.fireAge = (float) Math.max(0.0, now - entry.shotTime);
 			view.fireAimed = aiming;
@@ -75,6 +75,18 @@ public final class RemoteGuns {
 			view.reloadStep = state.reloadStep();
 		}
 		return view;
+	}
+
+	/** Same blend as the shooter sees: snaps in when empty, eases out over the start of a reload. */
+	private static float emptyBlend(GunState state, long gameTime, float partialTick) {
+		if (state.rounds() > 0) {
+			return 0f;
+		}
+		if (!state.reloading()) {
+			return 1f;
+		}
+		float seconds = (gameTime - state.reloadStart() + partialTick) / 20f;
+		return Mth.clamp(1f - seconds / GunView.EMPTY_FADE_SECONDS, 0f, 1f);
 	}
 
 	/** Forgets holders that haven't been drawn for a while. */

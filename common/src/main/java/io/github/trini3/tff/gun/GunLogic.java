@@ -25,6 +25,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -104,21 +105,39 @@ public final class GunLogic {
 			return ProjectileBehavior.BULLET;
 		});
 		float spread = GunStats.spread(gun, stack, level.registryAccess(), aiming);
-		Vec3 aim = Vec3.directionFromRotation(xRot, yRot);
+		Vec3 aim = Vec3.directionFromRotation(xRot, yRot).normalize();
 		Vec3 origin = player.getEyePosition();
 		RandomSource random = player.getRandom();
 		float speed = ammo.speed() * gun.velocityMultiplier();
 
-		for (int i = 0; i < ammo.pellets(); i++) {
-			Vec3 dir = GunMath.spread(aim, spread, random.nextDouble(), random.nextDouble());
-			BulletEntity bullet = new BulletEntity(TffEntities.BULLET.get(), level);
-			bullet.setOwner(player);
-			bullet.configure(ammo, behavior, gun.damageMultiplier(), origin);
-			bullet.setPos(origin.x, origin.y - bullet.getBbHeight() / 2.0, origin.z);
-			bullet.setDeltaMovement(dir.scale(speed));
-			bullet.alignRotationToMovement();
-			level.addFreshEntity(bullet);
+		List<Vec2> pattern = ammo.pattern();
+		if (pattern.isEmpty()) {
+			// No pattern: every pellet lands somewhere random inside the spread.
+			for (int i = 0; i < ammo.pellets(); i++) {
+				spawnBullet(level, player, gun, ammo, behavior, origin, GunMath.spread(aim, spread, random.nextDouble(), random.nextDouble()), speed);
+			}
+			return;
 		}
+		// A pattern keeps its shape; the spread only moves where the whole pattern lands.
+		Vec3 centre = GunMath.spread(aim, spread, random.nextDouble(), random.nextDouble());
+		Vec3 right = GunMath.viewRight(yRot);
+		Vec3 up = GunMath.viewUp(xRot, yRot);
+		for (Vec2 point : pattern) {
+			spawnBullet(level, player, gun, ammo, behavior, origin, GunMath.offset(centre, right, up, point.x, point.y), speed);
+		}
+	}
+
+	private static void spawnBullet(ServerLevel level, Player player, GunDefinition gun, AmmoDefinition ammo, ProjectileBehavior behavior,
+									Vec3 origin, Vec3 dir, float speed) {
+		BulletEntity bullet = new BulletEntity(TffEntities.BULLET.get(), level);
+		bullet.setOwner(player);
+		bullet.configure(ammo, behavior, gun.damageMultiplier(), origin);
+		// The bullet's position is where its hit test starts, so start it exactly at the eye: the
+		// pellets then fly along the crosshair line.
+		bullet.setPos(origin);
+		bullet.setDeltaMovement(dir.scale(speed));
+		bullet.alignRotationToMovement();
+		level.addFreshEntity(bullet);
 	}
 
 	/** Muzzle smoke for everyone but the shooter, whose client puffs its own at the gun it sees. */

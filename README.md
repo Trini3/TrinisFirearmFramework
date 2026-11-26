@@ -34,8 +34,8 @@ The jar lands in `fabric/build/libs/`. The in-game check with screenshots is
    TffApi.registerItem(Identifier.fromNamespaceAndPath("mymod", "rifle_round"), p -> p);
    ```
 2. Data (`data/mymod/tff/`): `gun/rifle.json` (capacity, fire rate, reload timing and sound cues, spread,
-   recoil, aim zoom, sounds, muzzle smoke, accepted attachments), `ammo/<name>.json` (item, pellets,
-   damage and falloff, speed, gravity, drag, behaviour) and optionally `attachment/<name>.json` (scopes).
+   recoil, aim zoom, sounds, muzzle smoke, accepted attachments), `ammo/<name>.json` (item, pellets or a fixed
+   pellet pattern, damage and falloff, speed, gravity, drag, behaviour) and optionally `attachment/<name>.json` (scopes).
 3. Assets: the gun's parts as normal item models, an `assets/mymod/items/rifle.json` of type `tff:gun`
    listing them, and an animation file `assets/mymod/tff/animations/rifle.json` (bones, hold pose, aim,
    fire kick, reload). See [docs/GUNS.md](docs/GUNS.md).

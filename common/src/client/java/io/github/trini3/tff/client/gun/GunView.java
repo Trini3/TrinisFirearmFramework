@@ -7,6 +7,13 @@ package io.github.trini3.tff.client.gun;
  * instance is reused, so nothing here is kept between frames.
  */
 public final class GunView {
+	/**
+	 * Seconds the empty pose takes to ease out once a reload starts (it snaps in when the last
+	 * round is fired). A reload clip that keeps a part where the empty pose put it, such as a hammer
+	 * that stays down until the reload cocks it, moves that part there linearly over the same time.
+	 */
+	public static final float EMPTY_FADE_SECONDS = 0.2f;
+
 	/** Aim-down-sights blend, 0 (hip) to 1 (aimed), already eased. */
 	public float aim;
 	/** Sprint pose blend, 0 to 1. */

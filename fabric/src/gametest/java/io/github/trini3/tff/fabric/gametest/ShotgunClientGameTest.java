@@ -20,13 +20,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /**
- * In-game pass over the test shotgun: reload, fire, aim, scope, third person, left-handed and the
- * attachment bench, with screenshots of each animation at several moments for a visual check. Run
+ * In-game pass over the test shotgun: reload, fire, aim, scope, third person, left-handed, a
+ * buckshot range check on zombies at 50 and 70 blocks and the attachment bench, with screenshots of each animation at several moments for a visual check. Run
  * on demand with {@code ./gradlew :fabric:runClientGameTest} (needs a display; see
  * docs/KNOWN_ISSUES.md). Not part of {@code build}.
  *
@@ -63,9 +66,9 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 				context.takeScreenshot("reload_t" + pad(t));
 			}
 			context.waitTicks(10);
-			expectRounds(context, 2, "after reload");
+			expectRounds(context, 1, "after reload");
 			int shellsLeft = context.computeOnClient(mc -> mc.player.getInventory().countItem(TestShotgun.SHELL.get()));
-			check(shellsLeft == 10, "Expected 10 shells left, got " + shellsLeft);
+			check(shellsLeft == 11, "Expected 11 shells left (it takes one), got " + shellsLeft);
 			context.takeScreenshot("hip_loaded");
 
 			// Fire at the pig: flash, kick and recovery.
@@ -77,9 +80,12 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			context.waitTicks(3);
 			context.takeScreenshot("fire_t5");
 			context.waitTicks(10);
-			expectRounds(context, 1, "after a shot");
+			expectRounds(context, 0, "after a shot");
 			float pigAfter = world.getServer().computeOnServer(server -> pigHealth(server, pigPos));
 			check(pigAfter < pigHealth, "Pig was not hurt: " + pigHealth + " -> " + pigAfter);
+			// Single shot: the hammer stays down until the reload cocks it.
+			context.takeScreenshot("hip_fired");
+			reload(context);
 
 			// Aim down the sights (hold right click), then fire while aiming.
 			context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
@@ -95,7 +101,7 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			context.waitTicks(10);
 			context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
 			context.waitTicks(10);
-			expectRounds(context, 0, "after two shots");
+			expectRounds(context, 0, "after the aimed shot");
 			context.takeScreenshot("hip_empty_after_shots");
 
 			// Third person, standing and mid-reload.
@@ -110,7 +116,7 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			context.takeScreenshot("third_person_front_reload");
 			context.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
 			context.waitTicks(RELOAD_TICKS);
-			expectRounds(context, 2, "after the third person reload");
+			expectRounds(context, 1, "after the third person reload");
 
 			// Fit the scope (server side) and aim through it.
 			world.getServer().runOnServer(server ->
@@ -128,14 +134,22 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			context.waitTicks(5);
 
 			// Empty it and reload with the scope on: the scope rides on the barrel.
-			fireTwice(context);
+			fireOnce(context);
 			context.getInput().pressKey(GunInput.reloadKey);
 			context.waitTicks(9);
 			context.takeScreenshot("scoped_reload_t9");
 			context.waitTicks(9);
 			context.takeScreenshot("scoped_reload_t18");
 			context.waitTicks(RELOAD_TICKS);
-			expectRounds(context, 2, "after the scoped reload");
+			expectRounds(context, 1, "after the scoped reload");
+
+			// Range check through the scope: buckshot kills a zombie at 50 blocks, not at 70.
+			world.getServer().runCommand("kill @e[type=pig]");
+			world.getServer().runCommand("difficulty normal");
+			rangeShot(context, world, 50, true);
+			reload(context);
+			rangeShot(context, world, 70, false);
+			reload(context);
 
 			// Left-handed: everything mirrors.
 			world.getServer().runOnServer(server -> AttachmentLogic.remove(player(server).getMainHandItem(), AttachmentSlot.SCOPE));
@@ -147,14 +161,14 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			context.takeScreenshot("left_aim");
 			context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
 			context.waitTicks(10);
-			fireTwice(context);
+			fireOnce(context);
 			context.getInput().pressKey(GunInput.reloadKey);
 			context.waitTicks(9);
 			context.takeScreenshot("left_reload_t9");
 			context.waitTicks(9);
 			context.takeScreenshot("left_reload_t18");
 			context.waitTicks(RELOAD_TICKS);
-			expectRounds(context, 2, "after the left-handed reload");
+			expectRounds(context, 1, "after the left-handed reload");
 			setMainHand(context, HumanoidArm.RIGHT);
 
 			// Sprinting lowers the gun.
@@ -201,13 +215,63 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 		check(rounds == expected, "Expected " + expected + " rounds " + when + ", got " + rounds);
 	}
 
-	/** Two shots, waiting out the fire interval between them. */
-	private static void fireTwice(ClientGameTestContext context) {
-		context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
-		context.waitTicks(10);
+	/** One shot, which empties the single-shot gun. */
+	private static void fireOnce(ClientGameTestContext context) {
 		context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
 		context.waitTicks(10);
 		expectRounds(context, 0, "after emptying the gun");
+	}
+
+	/** Reloads with the R key and waits for it to finish. */
+	private static void reload(ClientGameTestContext context) {
+		context.getInput().pressKey(GunInput.reloadKey);
+		context.waitTicks(RELOAD_TICKS + 10);
+		expectRounds(context, 1, "after reloading");
+	}
+
+	/**
+	 * Stands a zombie {@code blocks} south, aims through the sights at its middle and fires once.
+	 * A stone block over its head keeps the sun off it.
+	 */
+	private static void rangeShot(ClientGameTestContext context, TestSingleplayerContext world, int blocks, boolean expectKill) {
+		BlockPos at = world.getServer().computeOnServer(server -> player(server).blockPosition().south(blocks));
+		world.getServer().runCommand("summon zombie " + at.getX() + " " + at.getY() + " " + at.getZ() + " {NoAI:1b,PersistenceRequired:1b}");
+		world.getServer().runCommand("setblock " + at.getX() + " " + (at.getY() + 2) + " " + at.getZ() + " stone");
+		context.waitTicks(10);
+		float[] rot = world.getServer().computeOnServer(server -> {
+			Zombie zombie = zombieNear(server, at);
+			if (zombie == null) {
+				return null;
+			}
+			Vec3 d = zombie.position().add(0, zombie.getBbHeight() / 2, 0).subtract(player(server).getEyePosition());
+			return new float[] {(float) Math.toDegrees(Math.atan2(-d.x, d.z)), (float) -Math.toDegrees(Math.atan2(d.y, d.horizontalDistance()))};
+		});
+		check(rot != null, "No zombie at " + blocks + " blocks");
+		context.getInput().lookAt(rot[0], rot[1]);
+		context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+		context.waitTicks(15);
+		context.takeScreenshot("range_" + blocks + "_aim");
+		context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
+		context.waitTicks(2);
+		context.takeScreenshot("range_" + blocks + "_hit");
+		context.waitTicks(10);
+		context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+		float health = world.getServer().computeOnServer(server -> {
+			Zombie zombie = zombieNear(server, at);
+			return zombie == null || !zombie.isAlive() ? 0f : zombie.getHealth();
+		});
+		if (expectKill) {
+			check(health <= 0f, "Buckshot did not kill the zombie at " + blocks + " blocks, health left " + health);
+		} else {
+			check(health > 0f && health < 20f, "Expected the zombie at " + blocks + " blocks hurt but alive, health " + health);
+		}
+		world.getServer().runCommand("kill @e[type=zombie]");
+		world.getServer().runCommand("setblock " + at.getX() + " " + (at.getY() + 2) + " " + at.getZ() + " air");
+		context.waitTicks(5);
+	}
+
+	private static @Nullable Zombie zombieNear(MinecraftServer server, BlockPos at) {
+		return server.overworld().getEntitiesOfClass(Zombie.class, new AABB(at).inflate(3)).stream().findFirst().orElse(null);
 	}
 
 	/** Changes the main hand option and lets the server sync it back to the player. */

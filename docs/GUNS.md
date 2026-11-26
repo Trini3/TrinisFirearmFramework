@@ -52,7 +52,7 @@ and they are synced to clients, so the shooter's client predicts its own shots a
 | `reload.round_ticks` | 10 | Length of each further round (per round only) |
 | `reload.sounds` | none | Sound cues timed from the start of the reload |
 | `reload.round_sounds` | none | Sound cues timed from the start of each further round (per round only) |
-| `spread.hip`, `spread.aim` | 4, 1 | Half-angle of the shot cone in degrees, from the hip and aiming |
+| `spread.hip`, `spread.aim` | 4, 1 | Half-angle of the shot cone in degrees, from the hip and aiming. With a patterned ammo it moves the whole pattern instead (see below) |
 | `recoil.pitch` | 2 | Upward camera kick per shot, in degrees |
 | `recoil.yaw` | 0.5 | Largest sideways kick, in degrees (random direction) |
 | `recoil.recovery` | 0.4 | Share of the upward kick that settles back by itself (0 to 1) |
@@ -81,7 +81,8 @@ same tick. Put them on the moments the reload animation shows: tick = seconds ×
 |---|---|---|
 | `item` | required | Item used up when reloading, one per round |
 | `behavior` | `tff:bullet` | Registered projectile behaviour. `tff:bullet` damages what it hits and stops at blocks |
-| `pellets` | 1 | Projectiles per shot (buckshot has several) |
+| `pellets` | 1, or the pattern's size | Projectiles per shot (buckshot has several) |
+| `pattern` | none | A fixed spot for every pellet, in degrees off the aim (see below) |
 | `damage` | required | Damage per projectile at close range |
 | `min_damage` | `damage` | Damage per projectile at `falloff_end` and beyond |
 | `falloff_start`, `falloff_end` | 16, 48 | Distance in blocks where damage starts to drop, and where it reaches `min_damage` |
@@ -91,7 +92,28 @@ same tick. Put them on the moments the reload animation shows: tick = seconds ×
 | `lifetime` | 60 | Ticks before the projectile disappears |
 | `pierce` | 0 | Extra entities it passes through |
 
-Every pellet counts: bullet damage skips the hurt cooldown, so 8 pellets of 2 damage deal 16.
+Every pellet counts: bullet damage skips the hurt cooldown, so 9 pellets of 5 damage deal 45.
+Bullets hit exact hitboxes. Vanilla widens every target by up to 0.3 blocks for arrows that have
+flown a few ticks, which would quietly spread a pattern's reach at range, so the framework doesn't.
+
+**Spread or pattern.** Without a `pattern`, each pellet lands somewhere random inside the gun's
+spread cone. With one, the pellets keep the pattern's shape and the gun's spread only moves where
+the whole pattern lands, so aimed shots (`spread.aim` 0) put it exactly on the crosshair. Each
+entry is either one point, `[right, up]` in degrees as the shooter sees it, or a ring of evenly
+spaced points. A ring's first point sits `rotation` degrees clockwise from straight up. The
+shotgun's buckshot is one centre pellet and a ring of eight, none of them straight up, down, left
+or right:
+
+```json
+"pattern": [
+  [0, 0],
+  {"ring": 8, "radius": 0.65, "rotation": 22.5}
+]
+```
+
+A pattern's size is the pellet count, so leave `pellets` out (a value that disagrees is an error).
+To size one, work out where it lands: a point `a` degrees off the aim is `distance × tan(a)`
+blocks off at the target. A zombie is 0.6 blocks wide and 1.95 tall.
 
 ### Attachment: `data/<ns>/tff/attachment/<name>.json`
 

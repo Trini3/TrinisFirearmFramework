@@ -18,6 +18,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -85,7 +86,7 @@ public class BulletEntity extends Projectile {
 		}
 
 		Vec3 movement = this.getDeltaMovement();
-		HitResult hit = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+		HitResult hit = this.findHit(movement);
 		Vec3 next = hit.getType() == HitResult.Type.MISS ? this.position().add(movement) : hit.getLocation();
 		this.setPos(next);
 		this.updateRotation();
@@ -100,6 +101,24 @@ public class BulletEntity extends Projectile {
 			this.setDeltaMovement(movement.scale(this.drag));
 		}
 		this.applyGravity();
+	}
+
+	/**
+	 * What the bullet hits on its way through {@code movement}: blocks, then the nearest entity
+	 * before them. Unlike vanilla's projectile test, which widens every target by up to 0.3 blocks
+	 * once an arrow has flown a few ticks, this uses the exact hitboxes, so a shot pattern hits
+	 * at range just as it is drawn up.
+	 */
+	private HitResult findHit(Vec3 movement) {
+		Vec3 from = this.position();
+		Vec3 to = from.add(movement);
+		HitResult hit = this.level().clipIncludingBorder(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+		if (hit.getType() != HitResult.Type.MISS) {
+			to = hit.getLocation();
+		}
+		EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
+			this.level(), this, from, to, this.getBoundingBox().expandTowards(movement).inflate(1.0), this::canHitEntity, 0f);
+		return entityHit != null ? entityHit : hit;
 	}
 
 	@Override

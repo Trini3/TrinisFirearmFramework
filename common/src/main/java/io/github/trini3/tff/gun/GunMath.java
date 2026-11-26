@@ -32,6 +32,30 @@ public final class GunMath {
 			.normalize();
 	}
 
+	/** The shooter's right, level with the ground, for a view yaw in degrees. */
+	public static Vec3 viewRight(float yRot) {
+		return Vec3.directionFromRotation(0f, yRot + 90f);
+	}
+
+	/** The shooter's up, square to both the view direction and {@link #viewRight}. */
+	public static Vec3 viewUp(float xRot, float yRot) {
+		return Vec3.directionFromRotation(xRot, yRot).cross(viewRight(yRot)).scale(-1.0).normalize();
+	}
+
+	/**
+	 * Turns {@code centre} by a pattern offset: {@code rightDeg} towards {@code right} and
+	 * {@code upDeg} towards {@code up}, both in degrees (as seen on a screen square to the aim).
+	 */
+	public static Vec3 offset(Vec3 centre, Vec3 right, Vec3 up, float rightDeg, float upDeg) {
+		if (rightDeg == 0f && upDeg == 0f) {
+			return centre;
+		}
+		return centre
+			.add(right.scale(Math.tan(Math.toRadians(rightDeg))))
+			.add(up.scale(Math.tan(Math.toRadians(upDeg))))
+			.normalize();
+	}
+
 	/** Linear damage falloff between {@code start} and {@code end} blocks travelled. */
 	public static float falloff(double distance, float damage, float minDamage, float start, float end) {
 		if (distance <= start) {
@@ -61,8 +85,8 @@ public final class GunMath {
 	 */
 	public static Vec3 muzzlePosition(Vec3 eye, float yRot, float xRot, float side, boolean aiming) {
 		Vec3 forward = Vec3.directionFromRotation(xRot, yRot);
-		Vec3 right = Vec3.directionFromRotation(0f, yRot + 90f);
-		Vec3 up = forward.cross(right).scale(-1.0).normalize();
+		Vec3 right = viewRight(yRot);
+		Vec3 up = viewUp(xRot, yRot);
 		return eye.add(forward.scale(1.1))
 			.add(right.scale(aiming ? 0.0 : 0.25 * side))
 			.add(up.scale(aiming ? -0.1 : -0.25));
