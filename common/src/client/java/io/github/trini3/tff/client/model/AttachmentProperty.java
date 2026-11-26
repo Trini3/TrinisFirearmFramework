@@ -14,8 +14,10 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
 /**
- * {@code tff:attachment} select property: the id of the attachment fitted in {@code slot}.
- * Gun item models use it inside a {@code minecraft:composite} model to add the scope model:
+ * {@code tff:attachment} select property: the id of the attachment fitted in {@code slot}. The
+ * {@code tff:gun} model shows attachments by itself (parts with an {@code attachment} field); this
+ * is for plain item models, for example an inventory icon that adds the scope inside a
+ * {@code minecraft:composite} model:
  * <pre>{@code
  * {"type": "minecraft:select", "property": "tff:attachment", "slot": "scope",
  *  "cases": [{"when": "mymod:scope", "model": {"type": "minecraft:model", "model": "mymod:item/scope_on_gun"}}],

@@ -10,6 +10,7 @@
     "ticks": 36,
     "sounds": [
       {"tick": 4, "sound": {"sound_id": "shotgun:item.shotgun.open"}},
+      {"tick": 19, "sound": {"sound_id": "minecraft:entity.item_frame.add_item"}, "volume": 0.6, "pitch": 1.4},
       {"tick": 26, "sound": {"sound_id": "shotgun:item.shotgun.close"}},
       {"tick": 31, "sound": {"sound_id": "shotgun:item.shotgun.cock"}, "volume": 0.8}
     ]

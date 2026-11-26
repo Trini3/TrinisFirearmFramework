@@ -1,0 +1,9 @@
+{
+  "ammo": ["tff_test:test_shell"],
+  "capacity": 2,
+  "fire_interval": 8,
+  "reload": { "mode": "magazine", "ticks": 10 },
+  "spread": { "hip": 6, "aim": 3 },
+  "aim": { "zoom": 0.9 },
+  "attachments": { "scope": ["tff_test:test_scope"] }
+}

@@ -26,7 +26,7 @@ PARTS = {
     "shotgun_body": [4, 5, 6, 10, 11, 12, 13, 14, 15, 16, 17],
     # Top lever: pushed aside to unlock the barrel.
     "shotgun_lever": [7],
-    # Hammer: falls on the last shot, cocked at the end of a reload.
+    # Hammer: snaps forward on every shot and is thumbed back at the end of a reload.
     "shotgun_hammer": [8, 9],
 }
 

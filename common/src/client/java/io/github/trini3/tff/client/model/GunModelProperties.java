@@ -15,9 +15,10 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Item model properties for gun animations, used in {@code assets/<ns>/items/<gun>.json}.
- * Animations are plain model swaps (vanilla item models), so they render like any item and
- * work with shader packs.
+ * Item model properties for guns, for vanilla {@code condition}, {@code range_dispatch} and
+ * {@code select} models in {@code assets/<ns>/items/<gun>.json}. The {@code tff:gun} model already
+ * animates the gun; these are for choosing between models, for example a different inventory icon
+ * while the gun is empty.
  * <ul>
  *   <li>{@code tff:reloading} (condition): a reload is in progress</li>
  *   <li>{@code tff:aiming} (condition): the holder is aiming down sights with this gun</li>

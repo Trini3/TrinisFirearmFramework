@@ -10,6 +10,6 @@ rootProject.name = 'TrinisFirearmFramework'
 
 // common: loader-agnostic code, compiled against vanilla Minecraft only.
 // fabric: Fabric entrypoints and loader glue; packages common into the shipped jar.
-// A neoforge module goes next to fabric when the port happens (see docs/PORTING.md).
+// A neoforge module goes next to fabric when the port happens (see docs/KNOWN_ISSUES.md, "Multi-loader layout").
 include 'common'
 include 'fabric'

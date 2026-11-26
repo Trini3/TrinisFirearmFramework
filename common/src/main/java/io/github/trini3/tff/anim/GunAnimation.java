@@ -22,7 +22,8 @@ import java.util.Optional;
  *       stretched to the reload's length in ticks</li>
  * </ul>
  * Every clip is optional. Bones named {@code root}, {@code gun}, {@code right_arm} and
- * {@code left_arm} only move the first-person view; all other bones also animate in third person.
+ * {@code left_arm}, and bones marked {@code view_only}, only move the first-person view; all other
+ * bones also animate in third person.
  */
 public final class GunAnimation {
 	public static final String ROOT = "root";
@@ -74,7 +75,7 @@ public final class GunAnimation {
 			this.bones[i] = def;
 			this.parents[i] = def.parent().map(this.indices::get).orElse(-1);
 			String name = this.names[i];
-			this.viewOnly[i] = name.equals(ROOT) || name.equals(GUN) || name.equals(RIGHT_ARM) || name.equals(LEFT_ARM);
+			this.viewOnly[i] = def.viewOnly() || name.equals(ROOT) || name.equals(GUN) || name.equals(RIGHT_ARM) || name.equals(LEFT_ARM);
 		}
 		this.bound = new HashMap<>();
 		clips.forEach((name, clip) -> {
@@ -144,7 +145,7 @@ public final class GunAnimation {
 		return this.parents[index];
 	}
 
-	/** Whether the bone only moves the first-person view (root, gun and arms). */
+	/** Whether the bone only moves the first-person view (root, gun, the arms and bones marked view_only). */
 	public boolean isViewOnly(int index) {
 		return this.viewOnly[index];
 	}

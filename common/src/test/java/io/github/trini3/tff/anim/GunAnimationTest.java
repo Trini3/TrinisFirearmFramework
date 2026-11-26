@@ -59,12 +59,14 @@ class GunAnimationTest {
 	@Test
 	void onlyViewBonesAreViewOnly() {
 		GunAnimation animation = parse("""
-			{"bones": {"root": {}, "gun": {"parent": "root"}, "right_arm": {}, "left_arm": {}, "bolt": {"parent": "gun"}}}""").getOrThrow();
+			{"bones": {"root": {}, "gun": {"parent": "root"}, "right_arm": {}, "left_arm": {}, "bolt": {"parent": "gun"},
+			 "round": {"parent": "bolt", "view_only": true}}}""").getOrThrow();
 		assertTrue(animation.isViewOnly(animation.boneIndex("root")));
 		assertTrue(animation.isViewOnly(animation.boneIndex("gun")));
 		assertTrue(animation.isViewOnly(animation.boneIndex("right_arm")));
 		assertTrue(animation.isViewOnly(animation.boneIndex("left_arm")));
 		assertFalse(animation.isViewOnly(animation.boneIndex("bolt")));
+		assertTrue(animation.isViewOnly(animation.boneIndex("round")), "marked view_only");
 	}
 
 	@Test
@@ -93,7 +95,7 @@ class GunAnimationTest {
 		for (String bone : List.of("root", "gun", "barrel", "shell", "lever", "hammer", "right_arm", "left_arm")) {
 			assertTrue(animation.boneIndex(bone) >= 0, "bone " + bone);
 		}
-		for (String clip : List.of("idle", "aim", "sprint", "empty", "fire", "fire_aim", "dry_fire", "reload")) {
+		for (String clip : List.of("idle", "aim", "sprint", "fire", "fire_aim", "dry_fire", "reload")) {
 			assertTrue(animation.clip(clip).isPresent(), "clip " + clip);
 		}
 		assertTrue(animation.clips().get("idle").loop(), "idle loops");
@@ -113,6 +115,18 @@ class GunAnimationTest {
 			Vector3f a = rest.matrix(i).transformPosition(new Vector3f(0.5f, 0.5f, 0.5f));
 			Vector3f b = end.matrix(i).transformPosition(new Vector3f(0.5f, 0.5f, 0.5f));
 			assertTrue(a.distance(b) < 1e-4f, "bone " + animation.boneName(i) + " ends the reload away from rest");
+		}
+
+		// Outside first person the shell stays in the barrel: the hand that carries it isn't drawn there.
+		int shell = animation.boneIndex("shell");
+		int barrel = animation.boneIndex("barrel");
+		for (float t = 0f; t <= reload.length(); t += 0.05f) {
+			Pose third = new Pose(animation);
+			third.apply(reload, t, 1f, false);
+			third.compute(false);
+			Vector3f s = third.matrix(shell).transformPosition(new Vector3f(0.5f, 0.3f, 0.2f));
+			Vector3f b = third.matrix(barrel).transformPosition(new Vector3f(0.5f, 0.3f, 0.2f));
+			assertTrue(s.distance(b) < 1e-4f, "shell leaves the barrel in third person at " + t + " s");
 		}
 	}
 }

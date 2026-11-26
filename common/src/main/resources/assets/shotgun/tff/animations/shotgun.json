@@ -1,13 +1,13 @@
 {
   "bones": {
-    "root": {"pivot": [8, 4, 11], "rotation": [2, 4, 0]},
-    "gun": {"parent": "root", "pivot": [8, 4, 11]},
+    "root": {"pivot": [8, 3.9, 12.8], "rotation": [0, 3, 0]},
+    "gun": {"parent": "root", "pivot": [8, 3.9, 12.8]},
     "barrel": {"parent": "gun", "pivot": [8, 3.85, 3.9]},
-    "shell": {"parent": "barrel", "pivot": [8, 5.15, 3]},
+    "shell": {"parent": "barrel", "pivot": [8, 5.15, 3], "view_only": true},
     "lever": {"parent": "gun", "pivot": [8, 6.35, 8.8]},
     "hammer": {"parent": "gun", "pivot": [8, 6.1, 9.35]},
-    "right_arm": {"parent": "gun", "pivot": [9.6, 3.9, 11.6], "rotation": [20, 30, 0], "scale": [1.3, 1.3, 1.3]},
-    "left_arm": {"parent": "root", "pivot": [6.6, 3.0, 0.5], "rotation": [25, -35, 0], "scale": [1.3, 1.3, 1.3]}
+    "right_arm": {"parent": "gun", "pivot": [8.3, 3.9, 12.8], "rotation": [58.3, 34.9, 0], "scale": [1.18, 1.18, 1.18]},
+    "left_arm": {"parent": "barrel", "pivot": [8, 2.6, -1.5], "rotation": [48.8, -37.6, 0], "scale": [1.18, 1.18, 1.18]}
   },
   "clips": {
     "idle": {
@@ -30,17 +30,13 @@
     },
     "aim": {
       "bones": {
-        "root": {"position": [0, 0, 2], "rotation": [-2, -4, 0]}
+        "root": {"position": [0, 0, 10.5], "rotation": [4.3, -3, 0]},
+        "right_arm": {"position": [0, -4, 0], "rotation": [25, 0, 0]}
       }
     },
     "sprint": {
       "bones": {
-        "root": {"position": [-2.5, -2, 1], "rotation": [-18, 32, 14]}
-      }
-    },
-    "empty": {
-      "bones": {
-        "hammer": {"rotation": [-22, 0, 0]}
+        "root": {"position": [0, 1.5, 0], "rotation": [-16, 14, 18]}
       }
     },
     "fire": {
@@ -49,13 +45,21 @@
         "root": {
           "position": {
             "0": [0, 0, 0],
-            "0.04": {"value": [0, 0.3, 1.8], "easing": "out_quad"},
+            "0.04": {"value": [0, 0.4, 2.2], "easing": "out_quad"},
             "0.35": {"value": [0, 0, 0], "easing": "out_cubic"}
           },
           "rotation": {
             "0": [0, 0, 0],
-            "0.04": {"value": [7, 0, -1], "easing": "out_quad"},
+            "0.04": {"value": [8, 0, -1.5], "easing": "out_quad"},
             "0.4": {"value": [0, 0, 0], "easing": "out_back"}
+          }
+        },
+        "hammer": {
+          "rotation": {
+            "0": [0, 0, 0],
+            "0.02": {"value": [-20, 0, 0], "easing": "out_quad"},
+            "0.12": [-20, 0, 0],
+            "0.3": {"value": [0, 0, 0], "easing": "in_out_sine"}
           }
         }
       }
@@ -66,25 +70,41 @@
         "root": {
           "position": {
             "0": [0, 0, 0],
-            "0.04": {"value": [0, 0.1, 1.1], "easing": "out_quad"},
+            "0.04": {"value": [0, 0.15, 1.4], "easing": "out_quad"},
             "0.3": {"value": [0, 0, 0], "easing": "out_cubic"}
           },
           "rotation": {
             "0": [0, 0, 0],
-            "0.04": {"value": [3, 0, 0], "easing": "out_quad"},
+            "0.04": {"value": [3.5, 0, 0], "easing": "out_quad"},
             "0.35": {"value": [0, 0, 0], "easing": "out_back"}
+          }
+        },
+        "hammer": {
+          "rotation": {
+            "0": [0, 0, 0],
+            "0.02": {"value": [-20, 0, 0], "easing": "out_quad"},
+            "0.12": [-20, 0, 0],
+            "0.3": {"value": [0, 0, 0], "easing": "in_out_sine"}
           }
         }
       }
     },
     "dry_fire": {
-      "length": 0.2,
+      "length": 0.25,
       "bones": {
         "root": {
           "rotation": {
             "0": [0, 0, 0],
             "0.05": {"value": [0.8, 0, 0], "easing": "out_quad"},
             "0.2": {"value": [0, 0, 0], "easing": "out_quad"}
+          }
+        },
+        "hammer": {
+          "rotation": {
+            "0": [0, 0, 0],
+            "0.02": {"value": [-20, 0, 0], "easing": "out_quad"},
+            "0.1": [-20, 0, 0],
+            "0.25": {"value": [0, 0, 0], "easing": "in_out_sine"}
           }
         }
       }
@@ -95,16 +115,24 @@
         "gun": {
           "position": {
             "0": [0, 0, 0],
-            "0.22": {"value": [-1.5, 1, 0], "easing": "out_quad"},
-            "1.3": [-1.5, 1, 0],
-            "1.34": {"value": [-1.5, 1.3, 0], "easing": "out_quad"},
+            "0.24": {"value": [-1.5, 1.5, 0], "easing": "out_quad"},
+            "0.5": [-1.5, 1.5, 0],
+            "0.76": {"value": [-1.2, 1.2, 0], "easing": "in_out_sine"},
+            "1.02": [-1.2, 1.2, 0],
+            "1.18": {"value": [-1.5, 1.5, 0], "easing": "in_out_sine"},
+            "1.28": [-1.5, 1.5, 0],
+            "1.33": {"value": [-1.5, 1.9, 0], "easing": "out_quad"},
             "1.62": {"value": [0, 0, 0], "easing": "in_out_sine"}
           },
           "rotation": {
             "0": [0, 0, 0],
-            "0.22": {"value": [-10, 8, 10], "easing": "out_quad"},
-            "1.3": [-10, 8, 10],
-            "1.34": {"value": [-7, 8, 10], "easing": "out_quad"},
+            "0.24": {"value": [5, 6, 12], "easing": "out_quad"},
+            "0.5": [5, 6, 12],
+            "0.76": {"value": [2, 7, 36], "easing": "in_out_sine"},
+            "1.02": [2, 7, 36],
+            "1.18": {"value": [5, 6, 12], "easing": "in_out_sine"},
+            "1.28": [5, 6, 12],
+            "1.33": {"value": [8, 6, 12], "easing": "out_quad"},
             "1.62": {"value": [0, 0, 0], "easing": "in_out_sine"}
           }
         },
@@ -112,70 +140,76 @@
           "rotation": {
             "0": [0, 0, 0],
             "0.06": [0, 0, 0],
-            "0.13": {"value": [0, 28, 0], "easing": "out_quad"},
-            "1.29": [0, 28, 0],
-            "1.33": {"value": [0, 0, 0], "easing": "in_quad"}
+            "0.12": {"value": [0, 30, 0], "easing": "out_quad"},
+            "1.28": [0, 30, 0],
+            "1.32": {"value": [0, 0, 0], "easing": "in_quad"}
           }
         },
         "barrel": {
           "rotation": {
             "0": [0, 0, 0],
             "0.14": [0, 0, 0],
-            "0.32": {"value": [-38, 0, 0], "easing": "out_back"},
-            "1.22": [-38, 0, 0],
-            "1.3": {"value": [0, 0, 0], "easing": "in_quad"}
+            "0.3": {"value": [-42, 0, 0], "easing": "out_back"},
+            "1.24": [-42, 0, 0],
+            "1.31": {"value": [0, 0, 0], "easing": "in_quad"}
           }
         },
         "shell": {
           "position": {
             "0": [0, 0, 0],
             "0.34": [0, 0, 0],
-            "0.42": {"value": [0, 0.1, 3.4], "easing": "out_quad"},
-            "0.62": {"value": [0.6, 6, 10], "easing": "out_quad"},
-            "0.63": [0, -9, 12],
-            "0.74": [0, -9, 12],
-            "0.92": {"value": [0, 0.2, 3.6], "easing": "out_quad"},
-            "1.02": {"value": [0, 0, 0], "easing": "in_out_quad"}
+            "0.4": {"value": [0, 0, 3.2], "easing": "out_quad"},
+            "0.52": {"value": [21.58, -3.72, 4.77], "easing": "linear"},
+            "0.53": [-13.38, -10.8, -0.74],
+            "0.64": [-13.38, -10.8, -0.74],
+            "0.84": {"value": [0, 0, 3.6], "easing": "out_quad"},
+            "0.98": {"value": [0, 0, 0], "easing": "in_out_quad"}
           },
           "rotation": {
             "0": [0, 0, 0],
-            "0.42": [0, 0, 0],
-            "0.62": {"value": [-150, 20, 0], "easing": "out_quad"},
-            "0.63": [0, 0, 0]
+            "0.4": [0, 0, 0],
+            "0.52": {"value": [-160, 40, 0], "easing": "linear"},
+            "0.53": [0, 0, 0]
           },
           "scale": {
             "0": [1, 1, 1],
-            "0.58": [1, 1, 1],
-            "0.6": [0, 0, 0],
-            "0.74": [0, 0, 0],
-            "0.76": [1, 1, 1]
+            "0.51": [1, 1, 1],
+            "0.52": [0, 0, 0],
+            "0.54": [0, 0, 0],
+            "0.55": [1, 1, 1]
           }
         },
         "left_arm": {
           "position": {
             "0": [0, 0, 0],
-            "0.2": [0, 0, 0],
-            "0.44": {"value": [-2, -10, 5], "easing": "in_out_sine"},
-            "0.7": [-1, -10, 7],
-            "0.92": {"value": [1.8, 4.6, 6.6], "easing": "out_quad"},
-            "1.02": {"value": [1.6, 4.0, 4.4], "easing": "in_out_quad"},
-            "1.15": {"value": [0, -3, 1], "easing": "in_out_sine"},
-            "1.22": [0, -3, 1],
-            "1.3": {"value": [0, 0, 0], "easing": "in_quad"}
+            "0.32": [0, 0, 0],
+            "0.5": {"value": [-15.78, -5.82, 6.51], "easing": "in_quad"},
+            "0.64": [-15.78, -5.82, 6.51],
+            "0.84": {"value": [-2.4, 4.98, 10.85], "easing": "out_quad"},
+            "0.98": {"value": [-2.4, 4.98, 7.25], "easing": "in_out_quad"},
+            "1.02": [-2.4, 4.98, 7.25],
+            "1.18": {"value": [0, 0, 0], "easing": "in_out_sine"}
           },
           "rotation": {
             "0": [0, 0, 0],
-            "0.7": [0, 0, 0],
-            "0.92": {"value": [-15, 20, 0], "easing": "out_quad"},
-            "1.02": [-15, 20, 0],
-            "1.15": {"value": [0, 0, 0], "easing": "in_out_sine"}
+            "0.14": [0, 0, 0],
+            "0.3": {"value": [4.25, -54.71, 0], "easing": "out_back"},
+            "0.32": [4.25, -54.71, 0],
+            "0.5": {"value": [-9.85, -44.13, 0], "easing": "in_quad"},
+            "0.64": [-9.85, -44.13, 0],
+            "0.84": {"value": [-21.2, -51.75, 0], "easing": "out_quad"},
+            "1.02": [-21.2, -51.75, 0],
+            "1.18": {"value": [4.25, -54.71, 0], "easing": "in_out_sine"},
+            "1.24": [4.25, -54.71, 0],
+            "1.31": {"value": [-4.76, 9.09, 0], "easing": "in_quad"},
+            "1.62": {"value": [0, 0, 0], "easing": "in_out_sine"}
           }
         },
         "hammer": {
           "rotation": {
             "0": [0, 0, 0],
             "1.5": [0, 0, 0],
-            "1.56": {"value": [10, 0, 0], "easing": "out_quad"},
+            "1.56": {"value": [15, 0, 0], "easing": "out_quad"},
             "1.66": {"value": [0, 0, 0], "easing": "in_quad"}
           }
         }

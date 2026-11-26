@@ -17,7 +17,7 @@
       },
       {"model": "tff:item/muzzle_flash", "flash": true}
     ],
-    "sight": {"bone": "gun", "position": [8, 6.3, 5.25]},
+    "sight": {"bone": "gun", "position": [8, 7.9, 9.7]},
     "muzzle": {"bone": "barrel", "position": [8, 5.15, -12.3]},
     "flash_ticks": 2
   }
