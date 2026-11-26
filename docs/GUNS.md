@@ -129,8 +129,9 @@ the complete, unsplit model, which then still works as a plain static item. Its
   makes it point at the crosshair from the lower right, the way most shooters and gun mods hold a
   long gun. Fine-tune the angle with the `root` bone's rest rotation instead (the shotgun turns 3°
   in toward the middle).
-- `translation` places the gun and `scale` sizes it. The shotgun's `[0.96, 5.08, -6.16]` at scale
-  0.85 puts the grip about 0.6 blocks right of, 0.4 below and 0.85 in front of the eye.
+- `translation` places the gun and `scale` sizes it. At scale 1 the gun is drawn at the same scale
+  as the player's arms. The shotgun's `[0.96, 5.22, -6.88]` at scale 1 puts the grip about 0.6
+  blocks right of, 0.45 below and 0.85 in front of the eye.
 - Leave out `firstperson_lefthand`: left-handed players get the right-handed setup mirrored.
 
 The other entries (`thirdperson_righthand`, `gui`, `ground`, `fixed`) work as for any item.
@@ -200,8 +201,8 @@ while it's empty. The framework adds the properties `tff:reloading` and `tff:aim
     "root": {"pivot": [8, 4, 13]},
     "gun": {"parent": "root", "pivot": [8, 4, 13]},
     "bolt": {"parent": "gun", "pivot": [9, 8, 10]},
-    "right_arm": {"parent": "gun", "pivot": [8.3, 4, 13], "rotation": [58, 35, 0], "scale": [1.18, 1.18, 1.18]},
-    "left_arm": {"parent": "gun", "pivot": [8, 3, -1], "rotation": [49, -38, 0], "scale": [1.18, 1.18, 1.18]}
+    "right_arm": {"parent": "gun", "pivot": [8.3, 4, 13], "rotation": [58, 35, 0]},
+    "left_arm": {"parent": "gun", "pivot": [8, 3, 1], "rotation": [49, -38, 0]}
   },
   "clips": {
     "idle": {"loop": true, "length": 4, "bones": {"root": {"rotation": {
@@ -239,8 +240,9 @@ Names the framework knows:
   sleeves. The middle of the hand sits on the bone's pivot. With no rotation the arm points
   straight ahead (hand toward -Z, shoulder toward +Z) with the back of the forearm up, and rotating
   the bone swings it around the hand: positive X drops the shoulder end, positive Y moves it right.
-  Arm size is the display scale times the bone's scale, where 1 is vanilla's size, so at display
-  scale 0.85 the shotgun uses 1.18. Parent an arm to the part its hand holds: the shotgun's left arm
+  Arm size is the display scale times the bone's scale, where 1 is vanilla's size: the shotgun's
+  display scale is 1, so its arm bones need no scale, while a gun shown at 0.85 would give them
+  1.18. Parent an arm to the part its hand holds: the shotgun's left arm
   is a child of the barrel and rides along when the barrel opens. Minecraft's arms are thick and
   only 12 pixels long, so keep the cut shoulder end below the bottom of the screen in every clip.
 
