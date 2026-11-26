@@ -1,0 +1,59 @@
+plugins {
+	id 'net.fabricmc.fabric-loom'
+}
+
+def common = project(':common')
+
+// Compile common's sources straight into this module: Fabric sees one mod and one jar, and
+// runs and gametests need no extra classpath wiring. A neoforge module does the same.
+sourceSets {
+	main {
+		java.srcDir common.file('src/main/java')
+		resources.srcDir common.file('src/main/resources')
+	}
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"${project.mod_id}" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+sourceSets {
+	client {
+		java.srcDir common.file('src/client/java')
+		resources.srcDir common.file('src/client/resources')
+	}
+}
+
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "${project.mod_id}-gametest"
+		enableGameTests = true
+		enableClientGameTests = true
+		eula = true
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+processResources {
+	def props = [version: project.version, mod_id: project.mod_id, mod_name: project.mod_name,
+				 minecraft_version: project.minecraft_version, loader_version: project.loader_version]
+	inputs.properties props
+	filesMatching('fabric.mod.json') { expand props }
+}
+
+java {
+	withSourcesJar()
+}

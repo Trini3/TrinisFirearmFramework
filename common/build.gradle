@@ -1,0 +1,27 @@
+// Loader-agnostic code. Compiled against vanilla Minecraft only, so a Fabric or NeoForge
+// import here fails the build. Minecraft 26.x ships unobfuscated, so the same classes run on
+// both loaders without remapping.
+plugins {
+	id 'net.fabricmc.fabric-loom'
+}
+
+loom {
+	splitEnvironmentSourceSets()
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	// Only for the Mixin / MixinExtras annotations; nothing in common may import net.fabricmc.
+	compileOnly "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+// common is never shipped on its own; the loader modules compile its sources into their jar.
+tasks.named('jar') { archiveClassifier = 'dev' }

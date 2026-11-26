@@ -1,0 +1,46 @@
+{
+  "ammo": [
+    "shotgun:buckshot"
+  ],
+  "capacity": 2,
+  "fire_mode": "semi",
+  "fire_interval": 6,
+  "reload": {
+    "mode": "magazine",
+    "ticks": 36,
+    "sounds": [
+      {"tick": 4, "sound": {"sound_id": "shotgun:item.shotgun.open"}},
+      {"tick": 26, "sound": {"sound_id": "shotgun:item.shotgun.close"}},
+      {"tick": 31, "sound": {"sound_id": "shotgun:item.shotgun.cock"}, "volume": 0.8}
+    ]
+  },
+  "spread": {
+    "hip": 7,
+    "aim": 4.5
+  },
+  "recoil": {
+    "pitch": 6,
+    "yaw": 1.5,
+    "recovery": 0.5
+  },
+  "aim": {
+    "zoom": 0.85,
+    "recoil_factor": 0.7
+  },
+  "sounds": {
+    "fire": {"sound_id": "shotgun:item.shotgun.fire"},
+    "dry_fire": {"sound_id": "shotgun:item.shotgun.cock"}
+  },
+  "muzzle": {
+    "particle": {
+      "type": "minecraft:smoke"
+    },
+    "count": 6,
+    "speed": 0.03
+  },
+  "attachments": {
+    "scope": [
+      "shotgun:scope"
+    ]
+  }
+}
