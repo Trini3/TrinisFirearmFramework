@@ -59,9 +59,9 @@ New threads working on this repo: read this first, and add a short note here whe
 - Head boxes turn with the body, not the head, so a mob looking sideways keeps its head box in front.
 - 26.x babies have their own models with bigger heads. Baby zombies, husks, drowned, piglins, zombified piglins, villagers and zombie villagers have their own `baby_boxes`; other babies use the adult box shrunk to their hitbox, so a shot low on a baby animal's head can count as a body shot.
 - Mobs in no head file get a guess (everything from 12 % of their height below the eyes up). Every vanilla living entity is in a file; `HeadshotGameTests#everyVanillaMobHasAHeadFile` fails when a Minecraft update adds one, so add it to a file then.
-- A headshot throws 6 vanilla crit sparks from the hit point (server-sent particles, everyone sees them). There is no headshot sound.
+- With `headshot_sparks` on (off by default, at Trini3's request), a headshot throws 6 vanilla crit sparks from the hit point (server-sent particles, everyone sees them). There is no headshot sound.
 - `tff:head` is a synced datapack registry like the others, though only the server reads it so far.
-- `config/tff.json` is written with the defaults when it is missing or empty and read again on Fabric's `SERVER_STARTING`, so edits apply on the next world or server start. A file that doesn't parse, or has a value out of range, is left alone and the defaults are used, with a warning in the log. Settings missing from the file are added back with their defaults. The folder comes from `TffPlatform#configDir`.
+- `config/tff.json` is written with the defaults when it is missing or empty and read again on Fabric's `SERVER_STARTING`, so edits apply on the next world or server start. A file that doesn't parse, or has a value out of range, is left alone and the defaults are used, with a warning in the log. Settings missing from the file are added back with their defaults, so a file from an older version (without `headshot_sparks`) keeps its values and gains the new setting. The folder comes from `TffPlatform#configDir`.
 - DFU's `optionalFieldOf(name, default)` leaves a value equal to its default out when encoding, which would write an empty config file. Config fields use `optionalFieldOf(name)` with an `Optional` getter so the file lists every setting.
 
 ## Attachments and bench

@@ -338,7 +338,8 @@ practice that means:
 ## Headshots
 
 A bullet that hits a head does the server config's `headshot_multiplier` times its damage (1.5 by
-default, in `config/tff.json`; 1 turns headshots off). Head files, `data/<ns>/tff/head/<name>.json`,
+default, in `config/tff.json`; 1 turns headshots off), and throws crit sparks if `headshot_sparks`
+is on. Head files, `data/<ns>/tff/head/<name>.json`,
 say where heads are. The framework ships them for every vanilla mob in `data/tff/tff/head/`; a mod
 that adds mobs adds its own.
 

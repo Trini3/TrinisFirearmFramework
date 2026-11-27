@@ -155,14 +155,16 @@ public class BulletEntity extends Projectile {
 
 	/**
 	 * Deals this bullet's damage to the entity it hit, times the config's headshot multiplier when
-	 * it hit a head ({@link Headshots}). A headshot throws a few critical-hit sparks.
+	 * it hit a head ({@link Headshots}). With {@code headshot_sparks} on, a headshot throws a few
+	 * critical-hit sparks.
 	 */
 	public boolean damage(ServerLevel level, EntityHitResult hit) {
 		Entity target = hit.getEntity();
+		TffConfig config = TffConfig.get();
 		boolean headshot = Headshots.isHeadshot(level.registryAccess(), target, hit.getLocation());
-		float amount = this.currentDamage() * (headshot ? TffConfig.get().headshotMultiplier() : 1f);
+		float amount = this.currentDamage() * (headshot ? config.headshotMultiplier() : 1f);
 		boolean hurt = this.hurt(level, target, amount);
-		if (hurt && headshot) {
+		if (hurt && headshot && config.headshotSparks()) {
 			Vec3 at = hit.getLocation();
 			level.sendParticles(ParticleTypes.CRIT, at.x, at.y, at.z, 6, 0.05, 0.05, 0.05, 0.25);
 		}

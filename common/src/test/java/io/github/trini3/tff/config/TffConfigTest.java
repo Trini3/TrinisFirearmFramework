@@ -1,6 +1,7 @@
 package io.github.trini3.tff.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.gson.JsonObject;
@@ -32,14 +33,39 @@ class TffConfigTest {
 	void missingFileIsCreatedWithTheDefaults() throws Exception {
 		TffConfig config = TffConfig.load(this.file());
 		assertEquals(1.5f, config.headshotMultiplier());
-		assertEquals(1.5f, this.read().get("headshot_multiplier").getAsFloat(), "the default is written out");
+		assertFalse(config.headshotSparks(), "sparks are off by default");
+		JsonObject json = this.read();
+		assertEquals(1.5f, json.get("headshot_multiplier").getAsFloat(), "the defaults are written out");
+		assertFalse(json.get("headshot_sparks").getAsBoolean());
 	}
 
 	@Test
 	void valuesAreRead() throws Exception {
-		this.write("{\"headshot_multiplier\": 2.25}");
-		assertEquals(2.25f, TffConfig.load(this.file()).headshotMultiplier());
-		assertEquals("{\"headshot_multiplier\": 2.25}", Files.readString(this.file()), "file left as it was");
+		String text = "{\"headshot_multiplier\": 2.25, \"headshot_sparks\": true}";
+		this.write(text);
+		TffConfig config = TffConfig.load(this.file());
+		assertEquals(2.25f, config.headshotMultiplier());
+		assertTrue(config.headshotSparks());
+		assertEquals(text, Files.readString(this.file()), "file left as it was");
+	}
+
+	/** A file from before {@code headshot_sparks} existed keeps its multiplier and gets the new setting, off. */
+	@Test
+	void olderFileGetsNewSettingsAdded() throws Exception {
+		this.write("{\"headshot_multiplier\": 2}");
+		TffConfig config = TffConfig.load(this.file());
+		assertEquals(2f, config.headshotMultiplier());
+		assertFalse(config.headshotSparks());
+		JsonObject json = this.read();
+		assertEquals(2f, json.get("headshot_multiplier").getAsFloat(), "the multiplier is kept");
+		assertFalse(json.get("headshot_sparks").getAsBoolean(), "the new setting is added");
+	}
+
+	@Test
+	void wrongTypeUsesTheDefaultsAndIsKept() throws Exception {
+		this.write("{\"headshot_sparks\": \"yes\"}");
+		assertEquals(TffConfig.DEFAULT, TffConfig.load(this.file()));
+		assertEquals("{\"headshot_sparks\": \"yes\"}", Files.readString(this.file()));
 	}
 
 	@Test
@@ -68,6 +94,7 @@ class TffConfigTest {
 		assertEquals(TffConfig.DEFAULT, TffConfig.load(this.file()));
 		JsonObject json = this.read();
 		assertEquals(1.5f, json.get("headshot_multiplier").getAsFloat());
+		assertFalse(json.get("headshot_sparks").getAsBoolean());
 		assertTrue(json.get("something_else").getAsBoolean(), "other keys are kept");
 	}
 

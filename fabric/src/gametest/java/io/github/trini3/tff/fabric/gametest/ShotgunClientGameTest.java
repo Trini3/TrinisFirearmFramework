@@ -8,7 +8,13 @@ import io.github.trini3.tff.client.gun.LocalGun;
 import io.github.trini3.tff.config.TffConfig;
 import io.github.trini3.tff.data.AttachmentSlot;
 import io.github.trini3.tff.gun.GunItem;
+import io.github.trini3.tff.platform.TffPlatform;
 import io.github.trini3.tff.testgun.TestShotgun;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
@@ -156,7 +162,7 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			rangeShot(context, world, 70, false);
 			reload(context);
 
-			// Headshots, from the hip with the scope off so the zombie and the sparks show: the same
+			// Headshots, from the hip with the scope off so the zombie shows: the same
 			// shot at 8 blocks does the config's multiplier more damage to the head than to the body.
 			// The hip spread (1 degree) and the pattern stay inside the head or the body there.
 			world.getServer().runOnServer(server -> AttachmentLogic.remove(player(server).getMainHandItem(), AttachmentSlot.SCOPE));
@@ -170,6 +176,18 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 			System.out.println("Headshot check at 8 blocks: body shot " + body + ", headshot " + head + ", multiplier " + multiplier);
 			check(body > 40f, "Expected all 9 pellets in the body at 8 blocks, damage " + body);
 			check(Math.abs(head - body * multiplier) < 1f, "Headshot did " + head + ", body shot " + body + ", multiplier " + multiplier);
+			// Sparks are off by default; turn them on in the file, reload it as a world start would, and shoot again.
+			check(!TffConfig.get().headshotSparks(), "Headshot sparks should be off by default");
+			Path config = TffPlatform.INSTANCE.configDir().resolve(TffConfig.FILE_NAME);
+			String saved = readConfig(config);
+			writeConfig(config, "{\"headshot_multiplier\": " + multiplier + ", \"headshot_sparks\": true}");
+			TffConfig.load();
+			check(TffConfig.get().headshotSparks(), "headshot_sparks: true in the file did not turn sparks on");
+			float sparked = shotDamage(context, world, 8, 1.72, "headshot_sparks");
+			reload(context);
+			writeConfig(config, saved);
+			TffConfig.load();
+			check(Math.abs(sparked - head) < 1f, "Headshot with sparks did " + sparked + ", without " + head);
 
 			// Left-handed: everything mirrors.
 			setMainHand(context, HumanoidArm.LEFT);
@@ -333,6 +351,22 @@ public final class ShotgunClientGameTest implements FabricClientGameTest {
 		world.getServer().runCommand("setblock " + at.getX() + " " + (at.getY() + 2) + " " + at.getZ() + " air");
 		context.waitTicks(5);
 		return 200f - health;
+	}
+
+	private static String readConfig(Path file) {
+		try {
+			return Files.readString(file, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	private static void writeConfig(Path file, String text) {
+		try {
+			Files.writeString(file, text, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
 	}
 
 	private static @Nullable Zombie zombieNear(MinecraftServer server, BlockPos at) {

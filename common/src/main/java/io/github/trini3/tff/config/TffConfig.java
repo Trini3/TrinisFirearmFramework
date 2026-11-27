@@ -22,15 +22,19 @@ import java.util.Optional;
  * restarting the game. Fields left out keep their defaults and are added back to the file.
  *
  * @param headshotMultiplier damage multiplier for a bullet that hits a head (1 = no bonus)
+ * @param headshotSparks     whether a headshot throws a few critical-hit sparks
  */
-public record TffConfig(float headshotMultiplier) {
+public record TffConfig(float headshotMultiplier, boolean headshotSparks) {
 	public static final String FILE_NAME = "tff.json";
-	public static final TffConfig DEFAULT = new TffConfig(1.5f);
+	public static final TffConfig DEFAULT = new TffConfig(1.5f, false);
 
 	// Optional fields with a plain default would leave defaults out of the file, so wrap them in Optional.
 	public static final Codec<TffConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
-		Codec.floatRange(0f, 100f).optionalFieldOf("headshot_multiplier").forGetter(c -> Optional.of(c.headshotMultiplier()))
-	).apply(i, multiplier -> new TffConfig(multiplier.orElse(DEFAULT.headshotMultiplier()))));
+		Codec.floatRange(0f, 100f).optionalFieldOf("headshot_multiplier").forGetter(c -> Optional.of(c.headshotMultiplier())),
+		Codec.BOOL.optionalFieldOf("headshot_sparks").forGetter(c -> Optional.of(c.headshotSparks()))
+	).apply(i, (multiplier, sparks) -> new TffConfig(
+		multiplier.orElse(DEFAULT.headshotMultiplier()),
+		sparks.orElse(DEFAULT.headshotSparks()))));
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static volatile TffConfig current = DEFAULT;
@@ -43,7 +47,7 @@ public record TffConfig(float headshotMultiplier) {
 	/** Reads {@code tff.json} from the loader's config folder. */
 	public static void load() {
 		current = load(TffPlatform.INSTANCE.configDir().resolve(FILE_NAME));
-		Tff.LOGGER.info("Headshot multiplier {}", current.headshotMultiplier());
+		Tff.LOGGER.info("Headshot multiplier {}, sparks {}", current.headshotMultiplier(), current.headshotSparks() ? "on" : "off");
 	}
 
 	/**
