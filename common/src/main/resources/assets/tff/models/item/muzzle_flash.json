@@ -1,0 +1,41 @@
+{
+  "textures": {
+    "front": "tff:item/muzzle_flash_front",
+    "side": "tff:item/muzzle_flash_side",
+    "particle": "tff:item/muzzle_flash_front"
+  },
+  "elements": [
+    {
+      "from": [4.5, 4.5, 7.8],
+      "to": [11.5, 11.5, 7.8],
+      "shade": false,
+      "light_emission": 15,
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#front"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#front"}
+      }
+    },
+    {
+      "from": [8, 4.5, 0],
+      "to": [8, 11.5, 8],
+      "shade": false,
+      "light_emission": 15,
+      "rotation": {"origin": [8, 8, 8], "axis": "z", "angle": 45},
+      "faces": {
+        "east": {"uv": [0, 0, 16, 16], "texture": "#side"},
+        "west": {"uv": [16, 0, 0, 16], "texture": "#side"}
+      }
+    },
+    {
+      "from": [8, 4.5, 0],
+      "to": [8, 11.5, 8],
+      "shade": false,
+      "light_emission": 15,
+      "rotation": {"origin": [8, 8, 8], "axis": "z", "angle": -45},
+      "faces": {
+        "east": {"uv": [0, 0, 16, 16], "texture": "#side"},
+        "west": {"uv": [16, 0, 0, 16], "texture": "#side"}
+      }
+    }
+  ]
+}

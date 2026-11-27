@@ -1,0 +1,24 @@
+{
+  "model": {
+    "type": "tff:gun",
+    "transforms": "shotgun:item/shotgun",
+    "animation": "shotgun:shotgun",
+    "parts": [
+      {"model": "shotgun:item/shotgun_body"},
+      {"model": "shotgun:item/shotgun_barrel", "bone": "barrel"},
+      {"model": "shotgun:item/shotgun_lever", "bone": "lever"},
+      {"model": "shotgun:item/shotgun_hammer", "bone": "hammer"},
+      {"model": "shotgun:item/shotgun_shell", "bone": "shell"},
+      {
+        "model": "shotgun:item/scope_on_shotgun",
+        "bone": "barrel",
+        "attachment": "shotgun:scope",
+        "sight": {"bone": "barrel", "position": [8, 7.0, 2.6]}
+      },
+      {"model": "tff:item/muzzle_flash", "flash": true}
+    ],
+    "sight": {"bone": "gun", "position": [8, 7.9, 9.7]},
+    "muzzle": {"bone": "barrel", "position": [8, 5.15, -12.3]},
+    "flash_ticks": 2
+  }
+}

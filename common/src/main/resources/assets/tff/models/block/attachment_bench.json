@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "minecraft:block/spruce_planks",
+    "up": "tff:block/attachment_bench_top",
+    "north": "tff:block/attachment_bench_front",
+    "south": "tff:block/attachment_bench_side",
+    "east": "tff:block/attachment_bench_side",
+    "west": "tff:block/attachment_bench_side",
+    "particle": "tff:block/attachment_bench_front"
+  }
+}

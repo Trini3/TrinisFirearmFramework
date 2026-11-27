@@ -1,0 +1,9 @@
+{
+	"entities": [
+		"minecraft:player",
+		"minecraft:mannequin"
+	],
+	"boxes": [
+		{"from": [-16, 22.5, -16], "to": [16, 40, 16]}
+	]
+}

@@ -1,0 +1,60 @@
+# Backstop build only: threads build and test in the cloud before pushing.
+# Runs on: non-draft PRs that touch code, v* tags, and "Run workflow". Pushes never run it.
+name: Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'tools/**'
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event.pull_request.draft != true
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write # only used by the tag step, to create the release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      # Only runs on main save the cache; other runs only read it.
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      # build = compile, JUnit tests (common) and server gametests (fabric, which also compiles
+      # the client gametest). The client gametest itself needs a display and is run by hand.
+      - run: ./gradlew build -x sourcesJar
+
+      - if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mod-jar
+          path: fabric/build/libs/trinis-firearm-framework-fabric-*.jar
+          if-no-files-found: error
+          retention-days: 3
+
+      - if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" fabric/build/libs/trinis-firearm-framework-fabric-*.jar --generate-notes --title "$GITHUB_REF_NAME"

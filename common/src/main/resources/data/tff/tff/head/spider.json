@@ -1,0 +1,8 @@
+{
+	"entities": [
+		"minecraft:spider"
+	],
+	"boxes": [
+		{"from": [-4, 5, 3], "to": [4, 24, 24]}
+	]
+}

@@ -1,0 +1,9 @@
+{
+	"entities": [
+		"minecraft:hoglin",
+		"minecraft:zoglin"
+	],
+	"boxes": [
+		{"from": [-7, 5.5, 9], "to": [7, 32, 32]}
+	]
+}

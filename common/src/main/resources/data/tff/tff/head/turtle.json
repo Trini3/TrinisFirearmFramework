@@ -1,0 +1,8 @@
+{
+	"entities": [
+		"minecraft:turtle"
+	],
+	"boxes": [
+		{"from": [-3, 1, 7], "to": [3, 16, 24]}
+	]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "#minecraft:planks",
+    "@": "minecraft:iron_ingot",
+    "G": "minecraft:glass_pane"
+  },
+  "pattern": [
+    "@G@",
+    "###",
+    "# #"
+  ],
+  "result": {
+    "id": "tff:attachment_bench"
+  }
+}

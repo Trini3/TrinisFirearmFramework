@@ -1,0 +1,8 @@
+{
+	"entities": [
+		"minecraft:sniffer"
+	],
+	"boxes": [
+		{"from": [-6.5, 6, 13], "to": [6.5, 40, 40]}
+	]
+}

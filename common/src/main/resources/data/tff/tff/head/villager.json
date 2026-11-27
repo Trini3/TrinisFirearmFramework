@@ -1,0 +1,18 @@
+{
+	"entities": [
+		"minecraft:villager",
+		"minecraft:wandering_trader",
+		"minecraft:witch",
+		"minecraft:pillager",
+		"minecraft:vindicator",
+		"minecraft:evoker",
+		"minecraft:illusioner",
+		"minecraft:zombie_villager"
+	],
+	"boxes": [
+		{"from": [-16, 24, -16], "to": [16, 48, 16]}
+	],
+	"baby_boxes": [
+		{"from": [-16, 8, -16], "to": [16, 24, 16]}
+	]
+}

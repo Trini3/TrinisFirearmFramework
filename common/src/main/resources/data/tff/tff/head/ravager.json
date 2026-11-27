@@ -1,0 +1,8 @@
+{
+	"entities": [
+		"minecraft:ravager"
+	],
+	"boxes": [
+		{"from": [-8, 15, 9.5], "to": [8, 48, 40]}
+	]
+}

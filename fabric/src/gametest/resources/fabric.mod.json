@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "tff-gametest",
+	"version": "1.0.0",
+	"name": "Trini's Firearm Framework gametests",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.trini3.tff.fabric.gametest.TffTestContent"
+		],
+		"fabric-gametest": [
+			"io.github.trini3.tff.fabric.gametest.TffSmokeGameTests",
+			"io.github.trini3.tff.fabric.gametest.GunGameTests",
+			"io.github.trini3.tff.fabric.gametest.AttachmentGameTests",
+			"io.github.trini3.tff.fabric.gametest.HeadshotGameTests"
+		],
+		"fabric-client-gametest": [
+			"io.github.trini3.tff.fabric.gametest.ShotgunClientGameTest"
+		]
+	},
+	"depends": {
+		"tff": "*"
+	}
+}

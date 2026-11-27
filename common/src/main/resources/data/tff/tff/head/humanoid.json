@@ -1,0 +1,20 @@
+{
+	"entities": [
+		"minecraft:zombie",
+		"minecraft:husk",
+		"minecraft:drowned",
+		"minecraft:skeleton",
+		"minecraft:stray",
+		"minecraft:bogged",
+		"minecraft:parched",
+		"minecraft:piglin",
+		"minecraft:piglin_brute",
+		"minecraft:zombified_piglin"
+	],
+	"boxes": [
+		{"from": [-16, 24, -16], "to": [16, 40, 16]}
+	],
+	"baby_boxes": [
+		{"from": [-16, 9, -16], "to": [16, 24, 16]}
+	]
+}

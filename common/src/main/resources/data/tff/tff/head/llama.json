@@ -1,0 +1,9 @@
+{
+	"entities": [
+		"minecraft:llama",
+		"minecraft:trader_llama"
+	],
+	"boxes": [
+		{"from": [-4, 24, 5], "to": [4, 48, 32]}
+	]
+}

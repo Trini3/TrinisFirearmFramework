@@ -1,0 +1,9 @@
+{
+  "item": "minecraft:spyglass",
+  "slot": "scope",
+  "zoom": 0.35,
+  "aim_spread_multiplier": 0.8,
+  "recoil_multiplier": 0.9,
+  "overlay": "minecraft:misc/spyglass_scope",
+  "reticle": "shotgun:misc/scope_reticle"
+}
